@@ -1,0 +1,155 @@
+# Deploy to test environment
+deploy:
+  stage: test-environment-deployment
+  image: mcr.microsoft.com/powershell:7.5-alpine-3.20
+  variables:
+    DEPLOY_DIR: "C:\\agent\\deploy\\project_neo\\modules"
+  before_script:
+    - apk add --no-cache openssh-client curl
+    - pwsh -Command "Get-Host | Select-Object Version"
+    
+    # Настройка SSH для Windows Server
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    
+    # Добавляем хост в known_hosts (для Windows Server используем стандартный порт 22)
+    - ssh-keyscan -H ${DOCKER_HOST} >> ~/.ssh/known_hosts 2>/dev/null || true
+  script:
+    - echo "Deploying to ${DOCKER_HOST} environment on Windows Server 2022..."
+    - echo "Deployment directory:' ${DEPLOY_DIR}'"
+    
+    - echo "Ensuring deployment directory exists..."
+    - ssh -p 22 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no VSekretenko_local@${DOCKER_HOST} "powershell -Command \"New-Item -ItemType Directory -Path '${DEPLOY_DIR}' -Force | Out-Null\""
+
+    # Копируем jar файлы в modules
+    - echo "Copying jar files to modules directory..."
+    - scp -P 22 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no korus__ai__procurement_*.jar VSekretenko_local@${DOCKER_HOST}:${DEPLOY_DIR}\\
+    
+    # PowerShell скрипт для обновления плагинов
+    - |
+      cat > deploy-script.ps1 << 'PSEOF'
+        $ErrorActionPreference = "Stop"
+        
+        $VolumeName    = "project_neo_plugins"
+        $ContainerName = "dummy"
+        $PluginsDir    = "/app/plugins"
+        $TargetService = "project-neo-be"
+        
+        Set-Location C:\agent\deploy\project_neo\modules
+        
+        Write-Host "Starting temporary container..."
+        
+        docker run -d --rm `
+          --name $ContainerName `
+          -v "${VolumeName}:${PluginsDir}" `
+          alpine tail -f /dev/null
+        
+        Write-Host "Searching for jar files..."
+        
+        $jars = Get-ChildItem -Path . -Recurse -Filter *.jar -File
+        
+        if ($jars.Count -eq 0) {
+            Write-Host "No jar files found."
+            docker stop $ContainerName
+            throw "No jar files found in modules directory"
+        }
+        
+        foreach ($jar in $jars) {
+            Write-Host "Copying $($jar.Name)..."
+            docker cp $jar.FullName "${ContainerName}:${PluginsDir}/$($jar.Name)"
+        }
+        
+        Write-Host "Stopping temporary container..."
+        docker stop $ContainerName
+        
+        Write-Host "Restarting $TargetService..."
+        docker restart $TargetService
+        
+        Write-Host "Waiting for service to start..."
+        Start-Sleep -Seconds 30
+        
+        Write-Host "Container status:"
+        docker ps --filter "name=$TargetService"
+        
+        Write-Host "Application logs (last 50 lines):"
+        docker logs --tail=50 $TargetService
+        
+        Write-Host "Health check:"
+        
+        try {
+          $response = Invoke-WebRequest -Uri 'http://localhost:5000/actuator/health' -UseBasicParsing
+          Write-Host "Health check status:" $response.StatusCode
+          Write-Host $response.Content
+          
+          if ($response.StatusCode -ne 200) {
+            throw "Health check returned non-200 status"
+          }
+          
+        } catch {
+          Write-Host "Health check failed:" $_.Exception.Message
+          throw
+        }
+        
+        Write-Host "Deployment successful!"
+      PSEOF
+    
+    # Копируем и выполняем скрипт на удаленном сервере
+    - echo "Copying deployment script..."
+    - scp -P 22 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy-script.ps1 VSekretenko_local@${DOCKER_HOST}:C:\\agent\\temp\\
+    
+    - echo "Executing deployment on Windows Server..."
+    - ssh -p 22 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no VSekretenko_local@${DOCKER_HOST} "powershell -ExecutionPolicy Bypass -File C:\agent\temp\deploy-script.ps1"
+    
+    # Проверяем результат выполнения
+    - |
+      if [ $? -eq 0 ]; then
+        echo "Deployment completed successfully!"
+      else
+        echo "Deployment failed!"
+        exit 1
+      fi
+  dependencies:
+    - build
+  only:
+    - develop
+  environment:
+    name: test
+    url: http://${DOCKER_HOST}:5000
+  tags:
+    - ai-studio-agent
+  when: manual
+
+# Smoke tests на test окружении
+smoke-tests:
+  stage: test-environment-deployment
+  image: curlimages/curl:latest
+  variables:
+    TEST_URL: "http://${DOCKER_HOST}:5000"
+  script:
+    - echo "Running smoke tests against ${TEST_URL}..."
+    
+    # Health check
+    - echo "Checking application health..."
+    - curl -f ${TEST_URL}/actuator/health || exit 1
+    
+    # Info endpoint
+    - echo "Checking application info..."
+    - curl -f ${TEST_URL}/actuator/info || true
+    
+    # Metrics endpoint
+    - echo "Checking metrics..."
+    - curl -f ${TEST_URL}/actuator/metrics || true
+    
+    - echo "Smoke tests passed!"
+  dependencies:
+    - deploy
+  only:
+    - develop
+  needs:
+    - job: deploy
+      optional: true
+  tags:
+    - ai-studio-agent
+  allow_failure: false

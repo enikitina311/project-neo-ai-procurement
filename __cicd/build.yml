@@ -1,0 +1,56 @@
+# Build stage - сборка Maven проекта
+compile:
+  stage: build
+  image: maven:3.9.4-eclipse-temurin-17
+  before_script:
+    - echo "Starting build process..."
+    - mvn --version
+  script:
+    - echo "Building project..."
+    
+    - mvn clean install -DskipTests
+    
+    - echo "Build artifacts created successfully"
+    - ls -lh target/korus__ai__procurement_*.jar
+  artifacts:
+    paths:
+      - target/korus__ai__procurement_*.jar
+    expire_in: 1 hour
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - .m2/repository
+      - node_modules
+  tags:
+    - ai-studio-agent
+
+build:
+  stage: build
+  image: maven:3.9.4-eclipse-temurin-17
+  before_script:
+    - echo "Starting build process..."
+    - mvn --version
+  script:
+    - echo "Building project..."
+    
+    - mvn clean install -DskipTests
+    
+    - echo "Build artifacts created successfully"
+    - ls -lh target/korus__ai__procurement_*.jar
+    
+    - echo "Copying artifacts to root directory..."
+    - cp target/korus__ai__procurement_*.jar .
+    - ls -lh korus__ai__procurement_*.jar
+  artifacts:
+    paths:
+      - korus__ai__procurement_*.jar
+    expire_in: 1 hour
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - .m2/repository
+      - node_modules
+  only:
+    - develop
+  tags:
+    - ai-studio-agent

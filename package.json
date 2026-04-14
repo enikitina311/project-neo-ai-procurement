@@ -1,0 +1,16 @@
+{
+    "name": "project-neo-ai-procurement",
+    "version": "0.1.0",
+    "author": "Korus Consulting",
+    "description": "Сервис \"Ассистент закупок\" на базе ИИ для Project Neo",
+    "scripts": {
+        "assembly:set-dev-version": "node __tools/set-version.js",
+        "assembly:set-release-version": "node __tools/set-version.js true",
+        "docs:dbschema": "node __tools/generate-db-schema.js",
+        "docs:readme": "node __tools/generate-readme.js",
+        "docs:validate-api-docs": "node __tools/validate-api-docs.js",
+        "clean": "mvn clean",
+        "build:plugin": "mvn clean install -DskipTests",
+        "build": "mvn clean install && npm run docs:validate-api-docs && npm run docs:readme && npm run docs:dbschema"
+    }
+}

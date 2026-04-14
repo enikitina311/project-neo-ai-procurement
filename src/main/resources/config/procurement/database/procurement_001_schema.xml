@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT PACKAGES -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-packages" author="system" runOnChange="true">
+        <createTable tableName="procurement__packages">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="project_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="criteria_text" type="text" />
+            <column name="coverage_threshold" type="numeric(6,4)" defaultValueNumeric="0.7" />
+            <column name="suppliers_limit" type="int" defaultValueNumeric="10" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_packages_project_id"
+            tableName="procurement__packages">
+            <column name="project_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_procurement_packages_created_by"
+            tableName="procurement__packages">
+            <column name="created_by" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__packages"
+            baseColumnNames="project_id"
+            constraintName="fk_procurement_packages_project_id"
+            referencedTableName="core__projects"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__packages"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_packages_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__packages"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_packages_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <changeSet id="procurement-packages-coverage-threshold" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__packages" columnName="coverage_threshold" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__packages">
+            <column name="coverage_threshold" type="numeric(6,4)" defaultValueNumeric="0.7" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-packages-suppliers-limit" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__packages" columnName="suppliers_limit" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__packages">
+            <column name="suppliers_limit" type="int" defaultValueNumeric="10" />
+        </addColumn>
+    </changeSet>
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT ITEMS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-items" author="system" runOnChange="true">
+        <createTable tableName="procurement__items">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="package_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="name" type="text">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="specs" type="text" />
+            <column name="qty" type="numeric(14,4)" />
+            <column name="unit" type="varchar(50)" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_items_package_id"
+            tableName="procurement__items">
+            <column name="package_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__items"
+            baseColumnNames="package_id"
+            constraintName="fk_procurement_items_package_id"
+            referencedTableName="procurement__packages"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__items"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_items_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__items"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_items_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT SUPPLIERS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-suppliers" author="system" runOnChange="true">
+        <createTable tableName="procurement__suppliers">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="package_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="name" type="text">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="url" type="text" />
+            <column name="email" type="varchar(255)" />
+            <column name="price" type="numeric(14,4)" />
+            <column name="unit" type="varchar(50)" />
+            <column name="note" type="text" />
+            <column name="origin" type="varchar(50)" />
+            <column name="selected" type="boolean" defaultValueBoolean="false" />
+            <column name="coverage_count" type="int" />
+            <column name="coverage_ratio" type="numeric(6,4)" />
+            <column name="matched_items_json" type="jsonb" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_suppliers_package_id"
+            tableName="procurement__suppliers">
+            <column name="package_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__suppliers"
+            baseColumnNames="package_id"
+            constraintName="fk_procurement_suppliers_package_id"
+            referencedTableName="procurement__packages"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__suppliers"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_suppliers_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__suppliers"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_suppliers_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <changeSet id="procurement-suppliers-email" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__suppliers" columnName="email" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__suppliers">
+            <column name="email" type="varchar(255)" />
+        </addColumn>
+    </changeSet>
+
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT LETTERS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-letters" author="system" runOnChange="true">
+        <createTable tableName="procurement__letters">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="package_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="supplier_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="subject" type="text" />
+            <column name="body" type="text" />
+            <column name="status" type="varchar(50)" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_letters_package_id"
+            tableName="procurement__letters">
+            <column name="package_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_procurement_letters_supplier_id"
+            tableName="procurement__letters">
+            <column name="supplier_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__letters"
+            baseColumnNames="package_id"
+            constraintName="fk_procurement_letters_package_id"
+            referencedTableName="procurement__packages"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__letters"
+            baseColumnNames="supplier_id"
+            constraintName="fk_procurement_letters_supplier_id"
+            referencedTableName="procurement__suppliers"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__letters"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_letters_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__letters"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_letters_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT KP DOCUMENTS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-kp-documents" author="system" runOnChange="true">
+        <createTable tableName="procurement__kp_documents">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="package_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="supplier_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="file_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="uploaded_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_kp_documents_package_id"
+            tableName="procurement__kp_documents">
+            <column name="package_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_procurement_kp_documents_supplier_id"
+            tableName="procurement__kp_documents">
+            <column name="supplier_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_documents"
+            baseColumnNames="package_id"
+            constraintName="fk_procurement_kp_documents_package_id"
+            referencedTableName="procurement__packages"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_documents"
+            baseColumnNames="supplier_id"
+            constraintName="fk_procurement_kp_documents_supplier_id"
+            referencedTableName="procurement__suppliers"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_documents"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_kp_documents_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_documents"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_kp_documents_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT KP ANALYSIS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-kp-analysis" author="system" runOnChange="true">
+        <createTable tableName="procurement__kp_analysis">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="kp_document_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="is_complete" type="boolean" />
+            <column name="missing_fields" type="text" />
+            <column name="extracted_items_json" type="text" />
+            <column name="notes" type="text" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_kp_analysis_document_id"
+            tableName="procurement__kp_analysis">
+            <column name="kp_document_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_analysis"
+            baseColumnNames="kp_document_id"
+            constraintName="fk_procurement_kp_analysis_document_id"
+            referencedTableName="procurement__kp_documents"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_analysis"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_kp_analysis_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__kp_analysis"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_kp_analysis_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT NMC RESULTS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-nmc-results" author="system" runOnChange="true">
+        <createTable tableName="procurement__nmc_results">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="package_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="nmc_table_json" type="text" />
+            <column name="nmc_table_text" type="text" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_nmc_results_package_id"
+            tableName="procurement__nmc_results">
+            <column name="package_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__nmc_results"
+            baseColumnNames="package_id"
+            constraintName="fk_procurement_nmc_results_package_id"
+            referencedTableName="procurement__packages"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__nmc_results"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_nmc_results_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__nmc_results"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_nmc_results_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+</databaseChangeLog>

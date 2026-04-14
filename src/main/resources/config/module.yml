@@ -1,0 +1,15 @@
+# Конфигурация модуля
+module:
+  # База данных - развертывание схем и данных
+  database:
+    - name: "procurement-schema"
+      path: "config/procurement/database/procurement_001_schema.xml"
+      description: "Схема таблиц для сервиса 'Ассистент закупок'"
+      enabled: true
+      order: 1
+
+# Настройки модуля
+procurement:
+  processing:
+    # Интервал проверки статуса обработки в миллисекундах (по умолчанию 10 секунд)
+    polling-interval: 10000
