@@ -383,19 +383,31 @@ class ReadmeGenerator {
         const lines = [];
         const projectName = this.packageJson.name?.toUpperCase() || 'PROJECT-NEO-AI-QUESTIONS';
         const description = this.packageJson.description || 'Сервис ответов на вопросы на базе ИИ для Project Neo';
+        const version = this.packageJson.version || '0.1.0';
+        const author = this.packageJson.author || 'Korus Consulting';
 
         // Заголовок
-        lines.push(`# ${projectName}`);
+        lines.push(`# ${projectName} Version: ${version} by ${author}`);
         lines.push('');
-        lines.push(`${description}.`);
+        lines.push(`> ${description}`);
         lines.push('');
 
         // Оглавление
         lines.push('## Содержание');
         lines.push('');
+        lines.push('- [Документация модуля](#документация-модуля)');
         lines.push('- [API](#api)');
         lines.push('- [Сборка и развертывание](#сборка-и-развертывание)');
         lines.push('- [Примечания](#примечания)');
+        lines.push('');
+
+        lines.push('## Документация модуля');
+        lines.push('');
+        lines.push('| Раздел | Описание | Документ |');
+        lines.push('|--------|----------|----------|');
+        lines.push('| Обзор сервиса | Архитектура, основные сценарии и интеграции | [service_overview.md](./__documentation/service_overview.md) |');
+        lines.push('| Схема данных | Таблицы и структура хранения procurement-модуля | [db_schema.md](./__documentation/db_schema.md) |');
+        lines.push('| Smoke checklist | Ручные проверки после изменений backend/frontend | [manual_smoke_checklist.md](./__documentation/manual_smoke_checklist.md) |');
         lines.push('');
 
         lines.push('## API');
@@ -404,6 +416,8 @@ class ReadmeGenerator {
             lines.push('Сервис собирается как PF4J plugin и публикует свои маршруты через общий OpenAPI backend-приложения после загрузки plugin в backend.');
             lines.push('');
             lines.push('Отдельных `RestController` в этом репозитории не обнаружено, поэтому детальные спецификации API по контроллерам не генерируются.');
+            lines.push('');
+            lines.push('Основные runtime-контракты для procurement-сценариев описаны в [service_overview.md](./__documentation/service_overview.md).');
             lines.push('');
         } else {
             lines.push('API документация разделена по функциональным группам. Выберите нужную группу для просмотра детальной спецификации.');

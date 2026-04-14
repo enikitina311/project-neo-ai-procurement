@@ -2,7 +2,7 @@
     "name": "project-neo-ai-procurement",
     "version": "0.1.0",
     "author": "Korus Consulting",
-    "description": "Сервис \"Ассистент закупок\" на базе ИИ для Project Neo",
+    "description": "Сервис закупок и анализа коммерческих предложений на базе ИИ для Project Neo",
     "scripts": {
         "assembly:set-dev-version": "node __tools/set-version.js",
         "assembly:set-release-version": "node __tools/set-version.js true",

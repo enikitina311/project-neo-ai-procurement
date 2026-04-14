@@ -1,18 +1,29 @@
-# PROJECT-NEO-AI-PROCUREMENT
+# PROJECT-NEO-AI-PROCUREMENT Version: 0.1.0 by Korus Consulting
 
-Сервис "Ассистент закупок" на базе ИИ для Project Neo.
+> Сервис закупок и анализа коммерческих предложений на базе ИИ для Project Neo
 
 ## Содержание
 
+- [Документация модуля](#документация-модуля)
 - [API](#api)
 - [Сборка и развертывание](#сборка-и-развертывание)
 - [Примечания](#примечания)
+
+## Документация модуля
+
+| Раздел | Описание | Документ |
+|--------|----------|----------|
+| Обзор сервиса | Архитектура, основные сценарии и интеграции | [service_overview.md](./__documentation/service_overview.md) |
+| Схема данных | Таблицы и структура хранения procurement-модуля | [db_schema.md](./__documentation/db_schema.md) |
+| Smoke checklist | Ручные проверки после изменений backend/frontend | [manual_smoke_checklist.md](./__documentation/manual_smoke_checklist.md) |
 
 ## API
 
 Сервис собирается как PF4J plugin и публикует свои маршруты через общий OpenAPI backend-приложения после загрузки plugin в backend.
 
-Отдельных `RestController` в этом репозитории пока нет, поэтому детальные спецификации API по контроллерам не генерируются.
+Отдельных `RestController` в этом репозитории не обнаружено, поэтому детальные спецификации API по контроллерам не генерируются.
+
+Основные runtime-контракты для procurement-сценариев описаны в [service_overview.md](./__documentation/service_overview.md).
 
 ## Сборка и развертывание
 
