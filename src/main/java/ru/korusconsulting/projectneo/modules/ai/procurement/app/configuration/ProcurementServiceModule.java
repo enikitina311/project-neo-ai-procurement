@@ -33,12 +33,12 @@ public class ProcurementServiceModule implements ServiceModule {
 
     @Override
     public String version() {
-        return "0.1.0";
+        return "0.2.0";
     }
 
     @Override
     public String requiredCoreVersion() {
-        return ">=0.1";
+        return ">=0.2.0";
     }
 
     @Override

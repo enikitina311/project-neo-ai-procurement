@@ -179,14 +179,14 @@
 
 ### 5.3. При проблемах с КП
 
-- запись в `procurement__kp_documents`
+- запись в `procurement.kp_documents`
 - file storage по `file_id`
 - `ProcurementOcrService`
 - `ProcurementKpAnalysisWorkflow.java`
 
 ### 5.4. При проблемах с НМЦ
 
-- наличие `procurement__kp_analysis`
+- наличие `procurement.kp_analysis`
 - заполненность `extracted_items_json`
 - связка `kp_documents.supplier_id` <-> `suppliers.id`
 - `ProcurementNmcWorkflow.java`

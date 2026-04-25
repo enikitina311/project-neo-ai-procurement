@@ -188,13 +188,13 @@
 
 У модуля нет отдельного PostgreSQL schema namespace, но есть собственные таблицы:
 
-- `procurement__packages`
-- `procurement__items`
-- `procurement__suppliers`
-- `procurement__letters`
-- `procurement__kp_documents`
-- `procurement__kp_analysis`
-- `procurement__nmc_results`
+- `procurement.packages`
+- `procurement.items`
+- `procurement.suppliers`
+- `procurement.letters`
+- `procurement.kp_documents`
+- `procurement.kp_analysis`
+- `procurement.nmc_results`
 
 Подробная схема лежит в:
 
@@ -217,7 +217,7 @@
 
 ### 6.2. Важные поля поставщика
 
-В таблице `procurement__suppliers` особенно важны:
+В таблице `procurement.suppliers` особенно важны:
 
 - `selected`
 - `coverage_count`
@@ -229,7 +229,7 @@
 
 ### 6.3. Письма
 
-В таблице `procurement__letters` нет поля `template`.
+В таблице `procurement.letters` нет поля `template`.
 
 Это важно: шаблон письма не хранится в БД, а логика текста задается в `n8n`.
 
@@ -266,7 +266,7 @@
 
 Если письма “пропали” или “дублируются”, первым делом проверять:
 
-- очищаются ли старые записи в `procurement__letters`
+- очищаются ли старые записи в `procurement.letters`
 - смог ли backend сматчить draft из `n8n` на реального поставщика
 - не вернул ли `n8n` несколько draft-ов на одного поставщика
 
@@ -274,7 +274,7 @@
 
 Если анализ КП не работает, первым делом проверять:
 
-- существует ли `procurement__kp_documents` запись
+- существует ли `procurement.kp_documents` запись
 - доступен ли `file_id` в file storage
 - не упал ли OCR
 - что реально вернул `/webhook/procurement/analyze-kp`

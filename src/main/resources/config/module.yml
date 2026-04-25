@@ -2,6 +2,11 @@
 module:
   # База данных - развертывание схем и данных
   database:
+    - name: "procurement-create-schema"
+      path: "config/procurement/database/procurement_000_create_schema.xml"
+      description: "Phase 2.5.5: создаёт схему `procurement` до того как любой createTable начнёт её заселять"
+      enabled: true
+      order: 0
     - name: "procurement-schema"
       path: "config/procurement/database/procurement_001_schema.xml"
       description: "Схема таблиц для сервиса 'Ассистент закупок'"

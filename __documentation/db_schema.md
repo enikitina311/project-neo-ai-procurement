@@ -12,15 +12,15 @@ Generated at 2026-04-14T21:23:07.478Z
 
 | Table | Columns | Source Files |
 |-------|---------|--------------|
-| `procurement__items` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
-| `procurement__kp_analysis` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
-| `procurement__kp_documents` | 9 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
-| `procurement__letters` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
-| `procurement__nmc_results` | 8 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
-| `procurement__packages` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
-| `procurement__suppliers` | 17 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.items` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.kp_analysis` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.kp_documents` | 9 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.letters` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.nmc_results` | 8 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.packages` | 10 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
+| `procurement.suppliers` | 17 | `src/main/resources/config/procurement/database/procurement_001_schema.xml` |
 
-## procurement__items
+## procurement.items
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -38,16 +38,16 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `package_id` -> `procurement__packages`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `package_id` -> `procurement.packages`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_items_package_id`: `package_id`
 
 ---
 
-## procurement__kp_analysis
+## procurement.kp_analysis
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -65,16 +65,16 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `kp_document_id` -> `procurement__kp_documents`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `kp_document_id` -> `procurement.kp_documents`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_kp_analysis_document_id`: `kp_document_id`
 
 ---
 
-## procurement__kp_documents
+## procurement.kp_documents
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -91,10 +91,10 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `package_id` -> `procurement__packages`(`id`)
-- FK: `supplier_id` -> `procurement__suppliers`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `package_id` -> `procurement.packages`(`id`)
+- FK: `supplier_id` -> `procurement.suppliers`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_kp_documents_package_id`: `package_id`
@@ -102,7 +102,7 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 
 ---
 
-## procurement__letters
+## procurement.letters
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -120,10 +120,10 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `package_id` -> `procurement__packages`(`id`)
-- FK: `supplier_id` -> `procurement__suppliers`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `package_id` -> `procurement.packages`(`id`)
+- FK: `supplier_id` -> `procurement.suppliers`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_letters_package_id`: `package_id`
@@ -131,7 +131,7 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 
 ---
 
-## procurement__nmc_results
+## procurement.nmc_results
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -147,16 +147,16 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `package_id` -> `procurement__packages`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `package_id` -> `procurement.packages`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_nmc_results_package_id`: `package_id`
 
 ---
 
-## procurement__packages
+## procurement.packages
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -174,9 +174,9 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `project_id` -> `core__projects`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `project_id` -> `core.projects`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_packages_project_id`: `project_id`
@@ -184,7 +184,7 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 
 ---
 
-## procurement__suppliers
+## procurement.suppliers
 
 Sources: `src/main/resources/config/procurement/database/procurement_001_schema.xml`
 
@@ -209,9 +209,9 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 | `updated_at` | `timestamp with time zone` |  | ✅ |  | `NOW()` |
 
 **Foreign Keys**
-- FK: `package_id` -> `procurement__packages`(`id`)
-- FK: `created_by` -> `core__users`(`id`)
-- FK: `updated_by` -> `core__users`(`id`)
+- FK: `package_id` -> `procurement.packages`(`id`)
+- FK: `created_by` -> `core.users`(`id`)
+- FK: `updated_by` -> `core.users`(`id`)
 
 **Indexes**
 - `idx_procurement_suppliers_package_id`: `package_id`
@@ -222,7 +222,7 @@ Sources: `src/main/resources/config/procurement/database/procurement_001_schema.
 
 ```mermaid
 erDiagram
-  procurement__items {
+  procurement.items {
     UUID id PK
     UUID package_id FK
     TEXT name
@@ -234,7 +234,7 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__kp_analysis {
+  procurement.kp_analysis {
     UUID id PK
     UUID kp_document_id FK
     BOOLEAN is_complete
@@ -246,7 +246,7 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__kp_documents {
+  procurement.kp_documents {
     UUID id PK
     UUID package_id FK
     UUID supplier_id FK
@@ -257,7 +257,7 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__letters {
+  procurement.letters {
     UUID id PK
     UUID package_id FK
     UUID supplier_id FK
@@ -269,7 +269,7 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__nmc_results {
+  procurement.nmc_results {
     UUID id PK
     UUID package_id FK
     TEXT nmc_table_json
@@ -279,7 +279,7 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__packages {
+  procurement.packages {
     UUID id PK
     UUID project_id FK
     VARCHAR255 name
@@ -291,7 +291,7 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__suppliers {
+  procurement.suppliers {
     UUID id PK
     UUID package_id FK
     TEXT name
@@ -310,20 +310,20 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
   }
-  procurement__packages ||--o{ procurement__items : ""
-  core__users ||--o{ procurement__items : ""
-  procurement__kp_documents ||--o{ procurement__kp_analysis : ""
-  core__users ||--o{ procurement__kp_analysis : ""
-  procurement__packages ||--o{ procurement__kp_documents : ""
-  procurement__suppliers ||--o{ procurement__kp_documents : ""
-  core__users ||--o{ procurement__kp_documents : ""
-  procurement__packages ||--o{ procurement__letters : ""
-  procurement__suppliers ||--o{ procurement__letters : ""
-  core__users ||--o{ procurement__letters : ""
-  procurement__packages ||--o{ procurement__nmc_results : ""
-  core__users ||--o{ procurement__nmc_results : ""
-  core__projects ||--o{ procurement__packages : ""
-  core__users ||--o{ procurement__packages : ""
-  procurement__packages ||--o{ procurement__suppliers : ""
-  core__users ||--o{ procurement__suppliers : ""
+  procurement.packages ||--o{ procurement.items : ""
+  core.users ||--o{ procurement.items : ""
+  procurement.kp_documents ||--o{ procurement.kp_analysis : ""
+  core.users ||--o{ procurement.kp_analysis : ""
+  procurement.packages ||--o{ procurement.kp_documents : ""
+  procurement.suppliers ||--o{ procurement.kp_documents : ""
+  core.users ||--o{ procurement.kp_documents : ""
+  procurement.packages ||--o{ procurement.letters : ""
+  procurement.suppliers ||--o{ procurement.letters : ""
+  core.users ||--o{ procurement.letters : ""
+  procurement.packages ||--o{ procurement.nmc_results : ""
+  core.users ||--o{ procurement.nmc_results : ""
+  core.projects ||--o{ procurement.packages : ""
+  core.users ||--o{ procurement.packages : ""
+  procurement.packages ||--o{ procurement.suppliers : ""
+  core.users ||--o{ procurement.suppliers : ""
 ```

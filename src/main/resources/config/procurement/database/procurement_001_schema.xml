@@ -9,7 +9,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-packages" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__packages">
+        <createTable schemaName="procurement" tableName="packages">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -41,50 +41,50 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_packages_project_id"
-            tableName="procurement__packages">
+            schemaName="procurement" tableName="packages">
             <column name="project_id" />
         </createIndex>
 
         <createIndex indexName="idx_procurement_packages_created_by"
-            tableName="procurement__packages">
+            schemaName="procurement" tableName="packages">
             <column name="created_by" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__packages"
+            baseTableSchemaName="procurement" baseTableName="packages"
             baseColumnNames="project_id"
             constraintName="fk_procurement_packages_project_id"
-            referencedTableName="core__projects"
+            referencedTableSchemaName="core" referencedTableName="projects"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__packages"
+            baseTableSchemaName="procurement" baseTableName="packages"
             baseColumnNames="created_by"
             constraintName="fk_procurement_packages_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__packages"
+            baseTableSchemaName="procurement" baseTableName="packages"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_packages_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
 
     <changeSet id="procurement-kp-documents-with-detected-supplier" author="codex">
-        <dropForeignKeyConstraint baseTableName="procurement__kp_documents"
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_documents"
             constraintName="fk_procurement_kp_documents_supplier_id" />
 
         <dropIndex indexName="idx_procurement_kp_documents_supplier_id"
-            tableName="procurement__kp_documents" />
+            schemaName="procurement" tableName="kp_documents" />
 
-        <dropColumn tableName="procurement__kp_documents" columnName="supplier_id" />
+        <dropColumn schemaName="procurement" tableName="kp_documents" columnName="supplier_id" />
 
-        <addColumn tableName="procurement__kp_documents">
+        <addColumn schemaName="procurement" tableName="kp_documents">
             <column name="file_name" type="text" />
             <column name="supplier_name" type="text" />
         </addColumn>
@@ -93,10 +93,10 @@
     <changeSet id="procurement-packages-coverage-threshold" author="system">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__packages" columnName="coverage_threshold" />
+                <columnExists schemaName="procurement" tableName="packages" columnName="coverage_threshold" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__packages">
+        <addColumn schemaName="procurement" tableName="packages">
             <column name="coverage_threshold" type="numeric(6,4)" defaultValueNumeric="0.7" />
         </addColumn>
     </changeSet>
@@ -104,16 +104,16 @@
     <changeSet id="procurement-packages-suppliers-limit" author="system">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__packages" columnName="suppliers_limit" />
+                <columnExists schemaName="procurement" tableName="packages" columnName="suppliers_limit" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__packages">
+        <addColumn schemaName="procurement" tableName="packages">
             <column name="suppliers_limit" type="int" defaultValueNumeric="10" />
         </addColumn>
     </changeSet>
 
     <changeSet id="procurement-kp-analysis-supplier-name" author="codex">
-        <addColumn tableName="procurement__kp_analysis">
+        <addColumn schemaName="procurement" tableName="kp_analysis">
             <column name="supplier_name" type="text" />
         </addColumn>
     </changeSet>
@@ -121,10 +121,10 @@
     <changeSet id="procurement-kp-analysis-source-text" author="codex">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__kp_analysis" columnName="source_text" />
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="source_text" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__kp_analysis">
+        <addColumn schemaName="procurement" tableName="kp_analysis">
             <column name="source_text" type="text" />
         </addColumn>
     </changeSet>
@@ -132,10 +132,10 @@
     <changeSet id="procurement-kp-analysis-summary" author="codex">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__kp_analysis" columnName="summary" />
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="summary" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__kp_analysis">
+        <addColumn schemaName="procurement" tableName="kp_analysis">
             <column name="summary" type="text" />
         </addColumn>
     </changeSet>
@@ -143,10 +143,10 @@
     <changeSet id="procurement-kp-analysis-criteria-evaluation-json" author="codex">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__kp_analysis" columnName="criteria_evaluation_json" />
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="criteria_evaluation_json" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__kp_analysis">
+        <addColumn schemaName="procurement" tableName="kp_analysis">
             <column name="criteria_evaluation_json" type="text" />
         </addColumn>
     </changeSet>
@@ -154,10 +154,10 @@
     <changeSet id="procurement-kp-analysis-two-step-fields" author="codex">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__kp_analysis" columnName="extraction_status" />
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="extraction_status" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__kp_analysis">
+        <addColumn schemaName="procurement" tableName="kp_analysis">
             <column name="extraction_status" type="varchar(50)" />
             <column name="analysis_status" type="varchar(50)" />
             <column name="extracted_at" type="timestamp with time zone" />
@@ -174,7 +174,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-items" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__items">
+        <createTable schemaName="procurement" tableName="items">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -206,31 +206,31 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_items_package_id"
-            tableName="procurement__items">
+            schemaName="procurement" tableName="items">
             <column name="package_id" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__items"
+            baseTableSchemaName="procurement" baseTableName="items"
             baseColumnNames="package_id"
             constraintName="fk_procurement_items_package_id"
-            referencedTableName="procurement__packages"
+            referencedTableSchemaName="procurement" referencedTableName="packages"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__items"
+            baseTableSchemaName="procurement" baseTableName="items"
             baseColumnNames="created_by"
             constraintName="fk_procurement_items_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__items"
+            baseTableSchemaName="procurement" baseTableName="items"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_items_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
@@ -240,7 +240,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-suppliers" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__suppliers">
+        <createTable schemaName="procurement" tableName="suppliers">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -279,31 +279,31 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_suppliers_package_id"
-            tableName="procurement__suppliers">
+            schemaName="procurement" tableName="suppliers">
             <column name="package_id" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__suppliers"
+            baseTableSchemaName="procurement" baseTableName="suppliers"
             baseColumnNames="package_id"
             constraintName="fk_procurement_suppliers_package_id"
-            referencedTableName="procurement__packages"
+            referencedTableSchemaName="procurement" referencedTableName="packages"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__suppliers"
+            baseTableSchemaName="procurement" baseTableName="suppliers"
             baseColumnNames="created_by"
             constraintName="fk_procurement_suppliers_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__suppliers"
+            baseTableSchemaName="procurement" baseTableName="suppliers"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_suppliers_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
@@ -311,10 +311,10 @@
     <changeSet id="procurement-suppliers-email" author="system">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="procurement__suppliers" columnName="email" />
+                <columnExists schemaName="procurement" tableName="suppliers" columnName="email" />
             </not>
         </preConditions>
-        <addColumn tableName="procurement__suppliers">
+        <addColumn schemaName="procurement" tableName="suppliers">
             <column name="email" type="varchar(255)" />
         </addColumn>
     </changeSet>
@@ -325,7 +325,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-letters" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__letters">
+        <createTable schemaName="procurement" tableName="letters">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -357,44 +357,44 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_letters_package_id"
-            tableName="procurement__letters">
+            schemaName="procurement" tableName="letters">
             <column name="package_id" />
         </createIndex>
 
         <createIndex indexName="idx_procurement_letters_supplier_id"
-            tableName="procurement__letters">
+            schemaName="procurement" tableName="letters">
             <column name="supplier_id" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__letters"
+            baseTableSchemaName="procurement" baseTableName="letters"
             baseColumnNames="package_id"
             constraintName="fk_procurement_letters_package_id"
-            referencedTableName="procurement__packages"
+            referencedTableSchemaName="procurement" referencedTableName="packages"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__letters"
+            baseTableSchemaName="procurement" baseTableName="letters"
             baseColumnNames="supplier_id"
             constraintName="fk_procurement_letters_supplier_id"
-            referencedTableName="procurement__suppliers"
+            referencedTableSchemaName="procurement" referencedTableName="suppliers"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__letters"
+            baseTableSchemaName="procurement" baseTableName="letters"
             baseColumnNames="created_by"
             constraintName="fk_procurement_letters_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__letters"
+            baseTableSchemaName="procurement" baseTableName="letters"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_letters_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
@@ -404,7 +404,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-kp-documents" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__kp_documents">
+        <createTable schemaName="procurement" tableName="kp_documents">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -439,44 +439,44 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_kp_documents_package_id"
-            tableName="procurement__kp_documents">
+            schemaName="procurement" tableName="kp_documents">
             <column name="package_id" />
         </createIndex>
 
         <createIndex indexName="idx_procurement_kp_documents_supplier_id"
-            tableName="procurement__kp_documents">
+            schemaName="procurement" tableName="kp_documents">
             <column name="supplier_id" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_documents"
+            baseTableSchemaName="procurement" baseTableName="kp_documents"
             baseColumnNames="package_id"
             constraintName="fk_procurement_kp_documents_package_id"
-            referencedTableName="procurement__packages"
+            referencedTableSchemaName="procurement" referencedTableName="packages"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_documents"
+            baseTableSchemaName="procurement" baseTableName="kp_documents"
             baseColumnNames="supplier_id"
             constraintName="fk_procurement_kp_documents_supplier_id"
-            referencedTableName="procurement__suppliers"
+            referencedTableSchemaName="procurement" referencedTableName="suppliers"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_documents"
+            baseTableSchemaName="procurement" baseTableName="kp_documents"
             baseColumnNames="created_by"
             constraintName="fk_procurement_kp_documents_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_documents"
+            baseTableSchemaName="procurement" baseTableName="kp_documents"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_kp_documents_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
@@ -486,7 +486,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-kp-analysis" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__kp_analysis">
+        <createTable schemaName="procurement" tableName="kp_analysis">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -515,31 +515,31 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_kp_analysis_document_id"
-            tableName="procurement__kp_analysis">
+            schemaName="procurement" tableName="kp_analysis">
             <column name="kp_document_id" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_analysis"
+            baseTableSchemaName="procurement" baseTableName="kp_analysis"
             baseColumnNames="kp_document_id"
             constraintName="fk_procurement_kp_analysis_document_id"
-            referencedTableName="procurement__kp_documents"
+            referencedTableSchemaName="procurement" referencedTableName="kp_documents"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_analysis"
+            baseTableSchemaName="procurement" baseTableName="kp_analysis"
             baseColumnNames="created_by"
             constraintName="fk_procurement_kp_analysis_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__kp_analysis"
+            baseTableSchemaName="procurement" baseTableName="kp_analysis"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_kp_analysis_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
@@ -549,7 +549,7 @@
     <!-- ========================================================= -->
     <changeSet id="procurement-nmc-results" author="system">
         <validCheckSum>ANY</validCheckSum>
-        <createTable tableName="procurement__nmc_results">
+        <createTable schemaName="procurement" tableName="nmc_results">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -576,31 +576,31 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_nmc_results_package_id"
-            tableName="procurement__nmc_results">
+            schemaName="procurement" tableName="nmc_results">
             <column name="package_id" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__nmc_results"
+            baseTableSchemaName="procurement" baseTableName="nmc_results"
             baseColumnNames="package_id"
             constraintName="fk_procurement_nmc_results_package_id"
-            referencedTableName="procurement__packages"
+            referencedTableSchemaName="procurement" referencedTableName="packages"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__nmc_results"
+            baseTableSchemaName="procurement" baseTableName="nmc_results"
             baseColumnNames="created_by"
             constraintName="fk_procurement_nmc_results_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__nmc_results"
+            baseTableSchemaName="procurement" baseTableName="nmc_results"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_nmc_results_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>
@@ -611,11 +611,11 @@
     <changeSet id="procurement-supplier-search-runs" author="codex">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="procurement__supplier_search_runs" />
+                <tableExists schemaName="procurement" tableName="supplier_search_runs" />
             </not>
         </preConditions>
 
-        <createTable tableName="procurement__supplier_search_runs">
+        <createTable schemaName="procurement" tableName="supplier_search_runs">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -654,36 +654,36 @@
         </createTable>
 
         <createIndex indexName="idx_procurement_supplier_search_runs_package_id"
-            tableName="procurement__supplier_search_runs">
+            schemaName="procurement" tableName="supplier_search_runs">
             <column name="package_id" />
         </createIndex>
 
         <createIndex indexName="idx_procurement_supplier_search_runs_status"
-            tableName="procurement__supplier_search_runs">
+            schemaName="procurement" tableName="supplier_search_runs">
             <column name="status" />
         </createIndex>
 
         <addForeignKeyConstraint
-            baseTableName="procurement__supplier_search_runs"
+            baseTableSchemaName="procurement" baseTableName="supplier_search_runs"
             baseColumnNames="package_id"
             constraintName="fk_procurement_supplier_search_runs_package_id"
-            referencedTableName="procurement__packages"
+            referencedTableSchemaName="procurement" referencedTableName="packages"
             referencedColumnNames="id"
             onDelete="CASCADE" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__supplier_search_runs"
+            baseTableSchemaName="procurement" baseTableName="supplier_search_runs"
             baseColumnNames="created_by"
             constraintName="fk_procurement_supplier_search_runs_created_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
 
         <addForeignKeyConstraint
-            baseTableName="procurement__supplier_search_runs"
+            baseTableSchemaName="procurement" baseTableName="supplier_search_runs"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_supplier_search_runs_updated_by"
-            referencedTableName="core__users"
+            referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
     </changeSet>

@@ -54,7 +54,7 @@
 
 Нужна отдельная persistent-сущность, например:
 
-- таблица `procurement__supplier_search_runs`
+- таблица `procurement.supplier_search_runs`
 
 Минимальные поля:
 
@@ -168,7 +168,7 @@ response:
 - `startSearch()` создает запись поиска;
 - кладет задачу в backend queue;
 - worker берет задачу и вызывает `n8n`;
-- результаты пишет обратно в `procurement__supplier_search_runs`.
+- результаты пишет обратно в `procurement.supplier_search_runs`.
 
 Плюсы:
 
@@ -277,7 +277,7 @@ UI-модель должна измениться так:
 
 Сделать:
 
-- Liquibase migration для `procurement__supplier_search_runs`;
+- Liquibase migration для `procurement.supplier_search_runs`;
 - service/repository для работы с поисковыми запусками;
 - enum статусов.
 

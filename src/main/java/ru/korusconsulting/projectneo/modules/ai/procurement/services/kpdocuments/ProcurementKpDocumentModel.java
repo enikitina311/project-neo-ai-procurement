@@ -8,7 +8,7 @@ import ru.korusconsulting.projectneo.core.common.annotation.repositories.Table;
 import ru.korusconsulting.projectneo.core.common.repositories.Identifiable;
 
 @Data
-@Table("procurement__kp_documents")
+@Table("procurement.kp_documents")
 public class ProcurementKpDocumentModel implements Identifiable<UUID> {
     private UUID id;
     private UUID packageId;

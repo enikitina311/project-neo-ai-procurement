@@ -13,6 +13,20 @@ breaking changes affect this plugin.
 
 _No unreleased changes._
 
+## [0.2.0] — 2026-04-26
+
+### Changed (BREAKING)
+- **Schema-per-service.** Procurement tables moved from
+  `public.procurement__*` to `procurement.*`. The single
+  `procurement_001_schema.xml` rewritten in place; new
+  `procurement_000_create_schema.xml` registered at `module.yml` `order=0`.
+- **Cross-plugin FKs schema-qualified.** References to `core__users` and
+  `core__projects` now carry `referencedTableSchemaName="core"`.
+- **Java entity layer.** `@Table("procurement__X")` →
+  `@Table("procurement.X")` in 8 entity models.
+- **Compatibility.** `requiredCoreVersion` bumped to `>=0.2.0` —
+  procurement 0.2.x will not load against core 0.1.x.
+
 ## [0.1.0] — 2026-04-25
 
 - Baseline. Pre-Phase-2.5 layout (table prefix `procurement__*`, single
