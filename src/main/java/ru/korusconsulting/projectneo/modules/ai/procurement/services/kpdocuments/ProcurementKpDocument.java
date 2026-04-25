@@ -13,8 +13,9 @@ import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpdocuments
 public class ProcurementKpDocument implements CoreEntity<ProcurementKpDocument, ProcurementKpDocumentModel> {
     private UUID id;
     private UUID packageId;
-    private UUID supplierId;
     private UUID fileId;
+    private String fileName;
+    private String supplierName;
     private OffsetDateTime uploadedAt;
     private UUID createdBy;
     private UUID updatedBy;

@@ -15,7 +15,8 @@ import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpdocuments
 @CoreMapping(source = ProcurementKpDocument.class, mapperClass = ProcurementKpDocumentDtoMapper.class)
 public class ProcurementKpDocumentDto extends CoreBaseDtoImpl<ProcurementKpDocumentDto, ProcurementKpDocument> {
     private UUID packageId;
-    private UUID supplierId;
     private UUID fileId;
+    private String fileName;
+    private String supplierName;
     private OffsetDateTime uploadedAt;
 }

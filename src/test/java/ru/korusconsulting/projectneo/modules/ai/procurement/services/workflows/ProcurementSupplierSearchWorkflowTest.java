@@ -25,6 +25,9 @@ import ru.korusconsulting.projectneo.modules.ai.procurement.services.items.Procu
 import ru.korusconsulting.projectneo.modules.ai.procurement.services.items.dto.response.ProcurementItemDto;
 import ru.korusconsulting.projectneo.modules.ai.procurement.services.packages.ProcurementPackageService;
 import ru.korusconsulting.projectneo.modules.ai.procurement.services.packages.dto.response.ProcurementPackageDto;
+import ru.korusconsulting.projectneo.modules.ai.procurement.services.suppliersearch.ProcurementSupplierSearchRunService;
+import ru.korusconsulting.projectneo.modules.ai.procurement.services.support.ProcurementN8nAsyncClient;
+import ru.korusconsulting.projectneo.modules.ai.procurement.services.support.ProcurementN8nExecutionClient;
 import ru.korusconsulting.projectneo.modules.ai.procurement.services.support.ProcurementN8nHelper;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,11 +43,27 @@ class ProcurementSupplierSearchWorkflowTest {
     @Mock
     private ProcurementN8nHelper procurementN8nHelper;
 
+    @Mock
+    private ProcurementN8nAsyncClient procurementN8nAsyncClient;
+
+    @Mock
+    private ProcurementN8nExecutionClient procurementN8nExecutionClient;
+
+    @Mock
+    private ProcurementSupplierSearchRunService procurementSupplierSearchRunService;
+
     private ProcurementSupplierSearchWorkflow workflow;
 
     @BeforeEach
     void setUp() {
-        workflow = new ProcurementSupplierSearchWorkflow(itemService, packageService, procurementN8nHelper);
+        workflow = new ProcurementSupplierSearchWorkflow(
+            itemService,
+            packageService,
+            procurementN8nHelper,
+            procurementN8nAsyncClient,
+            procurementN8nExecutionClient,
+            procurementSupplierSearchRunService
+        );
     }
 
     @Test

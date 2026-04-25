@@ -15,6 +15,8 @@ import ru.korusconsulting.projectneo.core.services.n8n.N8nService;
 @Service
 @Slf4j
 public class ProcurementN8nHelper {
+    private static final int MAX_JSON_UNWRAP_DEPTH = 5;
+
     private final N8nService n8nService;
 
     @Autowired
@@ -55,32 +57,67 @@ public class ProcurementN8nHelper {
             return "";
         }
 
+        if (response.isTextual()) {
+            String text = response.asText();
+            JsonNode nested = tryParseJson(text);
+            if (nested != null && !nested.isTextual()) {
+                return extractOutput(nested);
+            }
+            return text;
+        }
+
         if (response.has("output")) {
             JsonNode outputNode = response.get("output");
-            return outputNode.isTextual() ? outputNode.asText() : outputNode.toString();
+            if (outputNode.isTextual()) {
+                String text = outputNode.asText();
+                JsonNode nested = tryParseJson(text);
+                if (nested != null && nested.isObject() && nested.has("output")) {
+                    return extractOutput(nested);
+                }
+                return text;
+            }
+            return outputNode.toString();
         }
 
         return response.toString();
     }
 
     public JsonNode tryParseJson(String value) {
-        try {
-            if (value == null || value.isBlank()) {
-                return null;
-            }
-            return StringExtensions.fromJson(value, JsonNode.class);
-        } catch (Exception ex) {
+        return tryParseJson(value, 0);
+    }
+
+    private JsonNode tryParseJson(String value, int depth) {
+        if (value == null || value.isBlank() || depth >= MAX_JSON_UNWRAP_DEPTH) {
+            return null;
+        }
+
+        JsonNode parsed = parseJsonNode(value);
+        if (parsed == null) {
             String sanitized = sanitizeJsonLike(value);
             if (sanitized == null) {
                 return null;
             }
-
-            try {
-                return StringExtensions.fromJson(sanitized, JsonNode.class);
-            } catch (Exception nested) {
-                return null;
-            }
+            parsed = parseJsonNode(sanitized);
         }
+
+        return unwrapTextualJson(parsed, depth);
+    }
+
+    private JsonNode parseJsonNode(String value) {
+        try {
+            return StringExtensions.fromJson(value, JsonNode.class);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    private JsonNode unwrapTextualJson(JsonNode parsed, int depth) {
+        if (parsed == null || !parsed.isTextual()) {
+            return parsed;
+        }
+
+        JsonNode nested = tryParseJson(parsed.asText(), depth + 1);
+        return nested != null ? nested : parsed;
     }
 
     private String sanitizeJsonLike(String value) {

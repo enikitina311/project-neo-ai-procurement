@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.korusconsulting.projectneo.core.app.context.AppContext;
 import ru.korusconsulting.projectneo.core.common.repositories.BaseRepository;
 import ru.korusconsulting.projectneo.core.common.repositories.RepositoryFactory;
 import ru.korusconsulting.projectneo.core.common.repositories.query.FieldCondition;
-import ru.korusconsulting.projectneo.core.common.repositories.query.QuerySpec;
+import ru.korusconsulting.projectneo.core.services.filestorage.FileStorageService;
 import ru.korusconsulting.projectneo.core.services.base.BaseDataServiceImpl;
 import ru.korusconsulting.projectneo.core.services.base.BaseReadWriteService;
 import ru.korusconsulting.projectneo.core.services.base.ReadWriteServiceFactory;
+import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpanalysis.ProcurementKpAnalysisService;
+import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpanalysis.dto.response.ProcurementKpAnalysisDto;
 import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpdocuments.dto.request.ProcurementKpDocumentDtoRequest;
 import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpdocuments.dto.response.ProcurementKpDocumentDto;
 
@@ -41,11 +44,12 @@ public class ProcurementKpDocumentServiceImpl extends BaseDataServiceImpl<Procur
             repository,
             ProcurementKpDocument.class,
             ProcurementKpDocumentDto.class,
-            new String[] {"package_id", "supplier_id", "file_id", "uploaded_at"},
+            new String[] {"package_id", "file_id", "file_name", "supplier_name", "uploaded_at"},
             (ProcurementKpDocumentDtoRequest r) -> new Object[] {
                 r.getPackageId(),
-                r.getSupplierId(),
                 r.getFileId(),
+                r.getFileName(),
+                r.getSupplierName(),
                 r.getUploadedAt()
             },
             (ProcurementKpDocumentDtoRequest r) -> Arrays.asList(
@@ -60,11 +64,33 @@ public class ProcurementKpDocumentServiceImpl extends BaseDataServiceImpl<Procur
     }
 
     @Override
-    public List<ProcurementKpDocumentDto> listBySupplierId(UUID supplierId) {
-        return map(
-            repository.find(QuerySpec.where("supplier_id", "=", supplierId)),
-            this.readWrite.entityClass,
-            this.readWrite.responseClass
-        );
+    public ProcurementKpDocumentDto updateSupplierName(UUID kpDocumentId, String supplierName) {
+        return updateField(kpDocumentId, "supplier_name", supplierName);
+    }
+
+    @Override
+    public void deleteById(UUID kpDocumentId) {
+        if (kpDocumentId == null) {
+            throw new IllegalArgumentException("KP document id is required");
+        }
+
+        ProcurementKpDocumentDto document = getNoThrow(kpDocumentId);
+        if (document == null) {
+            return;
+        }
+
+        ProcurementKpAnalysisService analysisService =
+            AppContext.tryGet(ProcurementKpAnalysisService.class);
+        ProcurementKpAnalysisDto analysis = analysisService.findByKpDocumentId(kpDocumentId);
+
+        if (analysis != null) {
+            analysisService.delete(analysis.getId());
+        }
+
+        delete(kpDocumentId);
+
+        if (document.getFileId() != null) {
+            AppContext.tryGet(FileStorageService.class).delete(document.getFileId());
+        }
     }
 }

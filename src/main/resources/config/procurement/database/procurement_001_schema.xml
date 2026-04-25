@@ -7,7 +7,8 @@
     <!-- ========================================================= -->
     <!-- PROCUREMENT PACKAGES -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-packages" author="system" runOnChange="true">
+    <changeSet id="procurement-packages" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__packages">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -74,6 +75,21 @@
             onDelete="RESTRICT" />
     </changeSet>
 
+    <changeSet id="procurement-kp-documents-with-detected-supplier" author="codex">
+        <dropForeignKeyConstraint baseTableName="procurement__kp_documents"
+            constraintName="fk_procurement_kp_documents_supplier_id" />
+
+        <dropIndex indexName="idx_procurement_kp_documents_supplier_id"
+            tableName="procurement__kp_documents" />
+
+        <dropColumn tableName="procurement__kp_documents" columnName="supplier_id" />
+
+        <addColumn tableName="procurement__kp_documents">
+            <column name="file_name" type="text" />
+            <column name="supplier_name" type="text" />
+        </addColumn>
+    </changeSet>
+
     <changeSet id="procurement-packages-coverage-threshold" author="system">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -96,10 +112,68 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="procurement-kp-analysis-supplier-name" author="codex">
+        <addColumn tableName="procurement__kp_analysis">
+            <column name="supplier_name" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-source-text" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__kp_analysis" columnName="source_text" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__kp_analysis">
+            <column name="source_text" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-summary" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__kp_analysis" columnName="summary" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__kp_analysis">
+            <column name="summary" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-criteria-evaluation-json" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__kp_analysis" columnName="criteria_evaluation_json" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__kp_analysis">
+            <column name="criteria_evaluation_json" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-two-step-fields" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="procurement__kp_analysis" columnName="extraction_status" />
+            </not>
+        </preConditions>
+        <addColumn tableName="procurement__kp_analysis">
+            <column name="extraction_status" type="varchar(50)" />
+            <column name="analysis_status" type="varchar(50)" />
+            <column name="extracted_at" type="timestamp with time zone" />
+            <column name="analyzed_at" type="timestamp with time zone" />
+            <column name="extracted_facts_json" type="text" />
+            <column name="standard_checks_json" type="text" />
+            <column name="total_without_vat" type="text" />
+            <column name="total_with_vat" type="text" />
+        </addColumn>
+    </changeSet>
+
     <!-- ========================================================= -->
     <!-- PROCUREMENT ITEMS -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-items" author="system" runOnChange="true">
+    <changeSet id="procurement-items" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__items">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -164,7 +238,8 @@
     <!-- ========================================================= -->
     <!-- PROCUREMENT SUPPLIERS -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-suppliers" author="system" runOnChange="true">
+    <changeSet id="procurement-suppliers" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__suppliers">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -248,7 +323,8 @@
     <!-- ========================================================= -->
     <!-- PROCUREMENT LETTERS -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-letters" author="system" runOnChange="true">
+    <changeSet id="procurement-letters" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__letters">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -326,7 +402,8 @@
     <!-- ========================================================= -->
     <!-- PROCUREMENT KP DOCUMENTS -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-kp-documents" author="system" runOnChange="true">
+    <changeSet id="procurement-kp-documents" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__kp_documents">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -407,7 +484,8 @@
     <!-- ========================================================= -->
     <!-- PROCUREMENT KP ANALYSIS -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-kp-analysis" author="system" runOnChange="true">
+    <changeSet id="procurement-kp-analysis" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__kp_analysis">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -469,7 +547,8 @@
     <!-- ========================================================= -->
     <!-- PROCUREMENT NMC RESULTS -->
     <!-- ========================================================= -->
-    <changeSet id="procurement-nmc-results" author="system" runOnChange="true">
+    <changeSet id="procurement-nmc-results" author="system">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="procurement__nmc_results">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
@@ -521,6 +600,89 @@
             baseTableName="procurement__nmc_results"
             baseColumnNames="updated_by"
             constraintName="fk_procurement_nmc_results_updated_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+    </changeSet>
+
+    <!-- ========================================================= -->
+    <!-- PROCUREMENT SUPPLIER SEARCH RUNS -->
+    <!-- ========================================================= -->
+    <changeSet id="procurement-supplier-search-runs" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="procurement__supplier_search_runs" />
+            </not>
+        </preConditions>
+
+        <createTable tableName="procurement__supplier_search_runs">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="package_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="query" type="text" />
+            <column name="status" type="varchar(32)">
+                <constraints nullable="false" />
+            </column>
+            <column name="request_payload_json" type="jsonb" />
+            <column name="result_raw" type="text" />
+            <column name="result_parsed_json" type="jsonb" />
+            <column name="error_text" type="text" />
+            <column name="n8n_execution_id" type="varchar(255)" />
+            <column name="cancel_requested" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="started_at" type="timestamp with time zone" />
+            <column name="finished_at" type="timestamp with time zone" />
+
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="updated_by" type="uuid">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+            <column name="updated_at" type="timestamp with time zone"
+                defaultValueComputed="NOW()" />
+        </createTable>
+
+        <createIndex indexName="idx_procurement_supplier_search_runs_package_id"
+            tableName="procurement__supplier_search_runs">
+            <column name="package_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_procurement_supplier_search_runs_status"
+            tableName="procurement__supplier_search_runs">
+            <column name="status" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__supplier_search_runs"
+            baseColumnNames="package_id"
+            constraintName="fk_procurement_supplier_search_runs_package_id"
+            referencedTableName="procurement__packages"
+            referencedColumnNames="id"
+            onDelete="CASCADE" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__supplier_search_runs"
+            baseColumnNames="created_by"
+            constraintName="fk_procurement_supplier_search_runs_created_by"
+            referencedTableName="core__users"
+            referencedColumnNames="id"
+            onDelete="RESTRICT" />
+
+        <addForeignKeyConstraint
+            baseTableName="procurement__supplier_search_runs"
+            baseColumnNames="updated_by"
+            constraintName="fk_procurement_supplier_search_runs_updated_by"
             referencedTableName="core__users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />

@@ -202,6 +202,10 @@ class DbSchemaGenerator {
         lines.push('');
         lines.push('> Автоматически сгенерировано из Liquibase databaseChangeLog файлов.');
         lines.push('');
+        lines.push('Сервис использует общую базу `projectneo`, но хранит свои данные в отдельных таблицах `procurement__*`.');
+        lines.push('');
+        lines.push('Важно: у модуля нет отдельного PostgreSQL namespace/schema, но собственная физическая модель данных у него есть.');
+        lines.push('');
         lines.push('## Tables');
         lines.push('');
         lines.push('| Table | Columns | Source Files |');

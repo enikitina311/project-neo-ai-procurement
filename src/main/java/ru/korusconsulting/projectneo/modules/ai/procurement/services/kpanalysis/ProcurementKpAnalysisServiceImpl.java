@@ -40,9 +40,39 @@ public class ProcurementKpAnalysisServiceImpl extends BaseDataServiceImpl<Procur
             repository,
             ProcurementKpAnalysis.class,
             ProcurementKpAnalysisDto.class,
-            new String[] {"kp_document_id", "is_complete", "missing_fields", "extracted_items_json", "notes"},
+            new String[] {
+                "kp_document_id",
+                "source_text",
+                "extraction_status",
+                "analysis_status",
+                "extracted_at",
+                "analyzed_at",
+                "extracted_facts_json",
+                "total_without_vat",
+                "total_with_vat",
+                "summary",
+                "standard_checks_json",
+                "criteria_evaluation_json",
+                "supplier_name",
+                "is_complete",
+                "missing_fields",
+                "extracted_items_json",
+                "notes"
+            },
             (ProcurementKpAnalysisDtoRequest r) -> new Object[] {
                 r.getKpDocumentId(),
+                r.getSourceText(),
+                r.getExtractionStatus(),
+                r.getAnalysisStatus(),
+                r.getExtractedAt(),
+                r.getAnalyzedAt(),
+                r.getExtractedFactsJson(),
+                r.getTotalWithoutVat(),
+                r.getTotalWithVat(),
+                r.getSummary(),
+                r.getStandardChecksJson(),
+                r.getCriteriaEvaluationJson(),
+                r.getSupplierName(),
                 r.getIsComplete(),
                 r.getMissingFields(),
                 r.getExtractedItemsJson(),
@@ -70,6 +100,18 @@ public class ProcurementKpAnalysisServiceImpl extends BaseDataServiceImpl<Procur
         if (existing == null) {
             ProcurementKpAnalysisDtoRequest createRequest = new ProcurementKpAnalysisDtoRequest();
             createRequest.setKpDocumentId(payload.getKpDocumentId());
+            createRequest.setSourceText(payload.getSourceText());
+            createRequest.setExtractionStatus(payload.getExtractionStatus());
+            createRequest.setAnalysisStatus(payload.getAnalysisStatus());
+            createRequest.setExtractedAt(payload.getExtractedAt());
+            createRequest.setAnalyzedAt(payload.getAnalyzedAt());
+            createRequest.setExtractedFactsJson(payload.getExtractedFactsJson());
+            createRequest.setTotalWithoutVat(payload.getTotalWithoutVat());
+            createRequest.setTotalWithVat(payload.getTotalWithVat());
+            createRequest.setSummary(payload.getSummary());
+            createRequest.setStandardChecksJson(payload.getStandardChecksJson());
+            createRequest.setCriteriaEvaluationJson(payload.getCriteriaEvaluationJson());
+            createRequest.setSupplierName(payload.getSupplierName());
             createRequest.setIsComplete(payload.getIsComplete());
             createRequest.setMissingFields(payload.getMissingFields());
             createRequest.setExtractedItemsJson(payload.getExtractedItemsJson());
@@ -80,6 +122,18 @@ public class ProcurementKpAnalysisServiceImpl extends BaseDataServiceImpl<Procur
         ProcurementKpAnalysisDtoRequest updateRequest = new ProcurementKpAnalysisDtoRequest();
         updateRequest.setId(existing.getId());
         updateRequest.setKpDocumentId(payload.getKpDocumentId());
+        updateRequest.setSourceText(payload.getSourceText());
+        updateRequest.setExtractionStatus(payload.getExtractionStatus());
+        updateRequest.setAnalysisStatus(payload.getAnalysisStatus());
+        updateRequest.setExtractedAt(payload.getExtractedAt());
+        updateRequest.setAnalyzedAt(payload.getAnalyzedAt());
+        updateRequest.setExtractedFactsJson(payload.getExtractedFactsJson());
+        updateRequest.setTotalWithoutVat(payload.getTotalWithoutVat());
+        updateRequest.setTotalWithVat(payload.getTotalWithVat());
+        updateRequest.setSummary(payload.getSummary());
+        updateRequest.setStandardChecksJson(payload.getStandardChecksJson());
+        updateRequest.setCriteriaEvaluationJson(payload.getCriteriaEvaluationJson());
+        updateRequest.setSupplierName(payload.getSupplierName());
         updateRequest.setIsComplete(payload.getIsComplete());
         updateRequest.setMissingFields(payload.getMissingFields());
         updateRequest.setExtractedItemsJson(payload.getExtractedItemsJson());

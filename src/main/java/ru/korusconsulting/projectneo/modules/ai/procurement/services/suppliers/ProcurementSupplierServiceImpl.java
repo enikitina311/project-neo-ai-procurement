@@ -93,4 +93,13 @@ public class ProcurementSupplierServiceImpl extends BaseDataServiceImpl<Procurem
     public ProcurementSupplierDto updateSelected(UUID supplierId, boolean selected) {
         return this.readWrite.updateField(supplierId, "selected", selected);
     }
+
+    @Override
+    public void deleteById(UUID supplierId) {
+        if (supplierId == null) {
+            throw new IllegalArgumentException("Supplier id is required");
+        }
+
+        repository.deleteById(supplierId);
+    }
 }

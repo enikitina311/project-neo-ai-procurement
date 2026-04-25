@@ -1,6 +1,6 @@
 # Ассистент закупок: текущее устройство сервиса
 
-Этот документ нужен как рабочая памятка для продолжения разработки сервиса в новом чате Codex без повторного исследования проекта с нуля.
+Этот документ нужен как рабочая памятка для продолжения разработки сервиса без повторного исследования проекта с нуля.
 
 ## 1. Что это за сервис
 
@@ -18,29 +18,63 @@
 - порог покрытия поставщиками
 - лимит поставщиков на позицию
 - номенклатурные позиции
-- найденных/выбранных поставщиков
+- найденных и выбранных поставщиков
 - письма поставщикам
 - загруженные КП
 - результаты анализа КП
 - результат расчета НМЦ
 
-## 2. Как это выглядит во фронтенде
+## 2. Как устроен модуль сейчас
+
+### 2.1. Общий runtime-поток
+
+Основной путь вызова выглядит так:
+
+`frontend page` -> `src/services/procurement/api.ts` -> `WORKSPACES.EXECUTE` -> `components/functions/*` -> `services/workflows/*` или `services/*` -> Postgres / file storage / OCR / n8n
+
+### 2.2. Backend-слои
+
+Текущий backend делится на такие уровни:
+
+- `components/functions/*` — публичные `DataFunction`-контракты для `korus_ai_procurement__*`
+- `services/workflows/*` — orchestration-логика для сценариев с `n8n`, OCR и агрегацией нескольких сервисов
+- `services/support/*` — helper-слой для `ComponentArgs` и нестабильных ответов `n8n`
+- `services/*` — CRUD и data-access по доменным сущностям
+- `src/main/resources/config/procurement/database/procurement_001_schema.xml` — Liquibase-схема таблиц модуля
+
+Важно: после рефакторинга сложная orchestration-логика больше не живет в `DataFunction`-классах.
+
+### 2.3. Frontend-слои
+
+Текущий frontend procurement-модуля делится на:
+
+- `ui/ProcurementPage.tsx` — список пакетов и read-only просмотр
+- `ui/ProcurementPackagePage.tsx` — route-container карточки пакета
+- `ui/components/*` — табы и sidebar
+- `hooks/*` — orchestration и загрузка данных
+- `lib/*` — shared util-логика по procurement
+- `src/services/procurement/api.ts` — типы и API-вызовы procurement-сценариев
+
+## 3. Как это выглядит во фронтенде
 
 Основные экраны:
 
 - список пакетов: `src/pages/procurement/ui/ProcurementPage.tsx`
 - карточка пакета: `src/pages/procurement/ui/ProcurementPackagePage.tsx`
+- компоненты карточки: `src/pages/procurement/ui/components/*`
+- hooks: `src/pages/procurement/hooks/*`
 - стили: `src/pages/procurement/ui/ProcurementPage.css`
 
-### 2.1. Экран списка пакетов
+### 3.1. Экран списка пакетов
 
-Поведение сделано по аналогии со `Встречами`:
+Поведение:
 
 - слева список пакетов
-- справа read-only табы по выбранному пакету
+- справа read-only вкладки по выбранному пакету
 - кнопка `Добавить пакет` открывает карточку нового пакета
+- ошибки загрузки списка и данных пакета показываются через toast и `EmptyState`
 
-### 2.2. Экран карточки пакета
+### 3.2. Экран карточки пакета
 
 Слева:
 
@@ -57,9 +91,9 @@
 - `Коммерческие предложения`
 - `НМЦ`
 
-## 3. Что уже реализовано на фронтенде
+## 4. Что уже реализовано на фронтенде
 
-### 3.1. Номенклатура
+### 4.1. Номенклатура
 
 На табе `Номенклатура`:
 
@@ -68,17 +102,19 @@
 - строки автоматически сохраняются
 - есть колонка с порядковым номером
 - удаление сделано через иконку корзины
+- ошибки create/update/delete показываются через toast
 
-### 3.2. Поставщики
+### 4.2. Поставщики
 
 На табе `Поставщики`:
 
-- поиск поставщиков запускается по кнопке `Найти поставщиков по пакету`
+- поиск запускается по кнопке `Найти поставщиков по пакету`
 - во время поиска показывается loader
 - повторный запуск во время текущего поиска блокируется
-- результаты поиска показываются в таблице
-- поставщики выбираются стандартным `Checkbox` из дизайн-системы
-- перенос в список выбранных поставщиков делается одной кнопкой `Перенести`
+- результаты поиска фильтруются по `coverageThreshold`
+- поставщики выбираются стандартным `Checkbox`
+- перенос в список поставщиков пакета делается кнопкой `Перенести`
+- ошибки поиска, выбора и переноса показываются через toast
 
 Показываемые поля:
 
@@ -88,23 +124,34 @@
 - покрытие
 - найденные позиции у поставщика
 
-### 3.3. Письма
+### 4.3. Письма
 
-На табе `Письма` сейчас:
+На табе `Письма`:
 
 - поле `Шаблон письма` удалено из UI и больше не используется
 - есть кнопка `Сформировать письма`
 - во время генерации кнопка блокируется и показывается loader
-- перед повторной генерацией фронтенд очищает текущий список писем
-- блок с черновиками писем имеет отдельный scroll
-- у каждого письма тело тоже прокручивается внутри карточки
+- текущий список писем на фронте не очищается заранее, а заменяется результатом успешной генерации
+- ошибки генерации показываются через toast
 
 Важно:
 
-- письма генерируются только по выбранным поставщикам
-- при повторной генерации старые письма в БД удаляются и записываются заново
+- backend генерирует письма по выбранным поставщикам
+- если выбранных поставщиков нет, backend fallback-ится на всех поставщиков пакета
+- перед новой генерацией старые письма в БД удаляются и создаются заново
 
-## 4. Как устроен backend-плагин
+### 4.4. КП и НМЦ
+
+На табах `Коммерческие предложения` и `НМЦ`:
+
+- загрузка КП идет отдельным upload-запросом в file storage, затем отдельной регистрацией документа в procurement
+- upload/analyze/generate кнопки имеют loading-state и блокировки
+- ошибки загрузки КП, анализа КП, загрузки сохраненного анализа и генерации НМЦ показываются через toast
+- при изменении списка КП фронт автоматически подгружает последний сохраненный анализ
+
+## 5. Как устроен backend-плагин
+
+### 5.1. Публичные функции
 
 Основные backend-функции лежат в:
 
@@ -119,64 +166,27 @@
 - `kp/*`
 - `nmc/*`
 
-### 4.1. Функции пакетов
+### 5.2. Workflow-слой
 
-- `korus_ai_procurement__package_create`
-- `korus_ai_procurement__package_list`
-- `korus_ai_procurement__package_get`
-- `korus_ai_procurement__package_update`
+Сложные сценарии вынесены в:
 
-### 4.2. Функции номенклатуры
+- `services/workflows/ProcurementSupplierSearchWorkflow.java`
+- `services/workflows/ProcurementLettersWorkflow.java`
+- `services/workflows/ProcurementKpAnalysisWorkflow.java`
+- `services/workflows/ProcurementNmcWorkflow.java`
 
-- `korus_ai_procurement__items_create`
-- `korus_ai_procurement__items_update`
-- `korus_ai_procurement__items_delete`
-- `korus_ai_procurement__items_list`
+### 5.3. Support-слой
 
-### 4.3. Функции поставщиков
+Ключевые внутренние helper-ы:
 
-- `korus_ai_procurement__supplier_search`
-- `korus_ai_procurement__supplier_list`
-- `korus_ai_procurement__supplier_select`
-- `korus_ai_procurement__supplier_add_manual`
+- `services/support/ProcurementFunctionArgs.java` — чтение и типизация `ComponentArgs`
+- `services/support/ProcurementN8nHelper.java` — безопасный вызов webhook, извлечение `output`, sanitize и JSON parsing
 
-Фактически ручное добавление в UI сейчас не является основным сценарием. Основной путь: поиск -> выбор -> перенос.
-
-### 4.4. Функции писем
-
-- `korus_ai_procurement__letters_generate`
-- `korus_ai_procurement__letters_list`
-
-Ключевой класс:
-
-- `components/functions/letters/LettersGenerate.java`
-
-Текущая логика `LettersGenerate`:
-
-1. Берет пакет, позиции и выбранных поставщиков.
-2. Если выбранных поставщиков нет, берет всех поставщиков пакета.
-3. Перед новой генерацией удаляет старые письма по пакету.
-4. Отправляет запрос в `n8n`.
-5. Парсит `drafts`.
-6. Сохраняет новые письма в `procurement__letters`.
-
-### 4.5. Функции КП
-
-- `korus_ai_procurement__kp_upload`
-- `korus_ai_procurement__kp_documents_list`
-- `korus_ai_procurement__kp_analyze`
-- `korus_ai_procurement__kp_analysis_get`
-
-### 4.6. Функции НМЦ
-
-- `korus_ai_procurement__nmc_generate`
-- `korus_ai_procurement__nmc_get`
-
-## 5. База данных сервиса
+## 6. База данных сервиса
 
 Сервис использует core Postgres `projectneo`.
 
-Таблицы сервиса:
+У модуля нет отдельного PostgreSQL schema namespace, но есть собственные таблицы:
 
 - `procurement__packages`
 - `procurement__items`
@@ -186,11 +196,11 @@
 - `procurement__kp_analysis`
 - `procurement__nmc_results`
 
-Отдельно описание схемы уже есть в:
+Подробная схема лежит в:
 
 - `__documentation/db_schema.md`
 
-### 5.1. Важные поля в пакете
+### 6.1. Важные поля пакета
 
 В пакете сейчас используются:
 
@@ -199,188 +209,135 @@
 - `coverage_threshold`
 - `suppliers_limit`
 
-Из пакета уже удалены / не используются:
+Из старых полей не используются:
 
 - `typology`
 - `direction`
 - `status`
 
-### 5.2. Письма
+### 6.2. Важные поля поставщика
+
+В таблице `procurement__suppliers` особенно важны:
+
+- `selected`
+- `coverage_count`
+- `coverage_ratio`
+- `matched_items_json`
+- `origin`
+
+`matched_items_json` хранится как JSONB и на фронте часто приходит/уходит как сериализованная строка.
+
+### 6.3. Письма
 
 В таблице `procurement__letters` нет поля `template`.
 
 Это важно: шаблон письма не хранится в БД, а логика текста задается в `n8n`.
 
-## 6. Как сервис связан с n8n
+## 7. Как сервис связан с n8n
 
-Используется отдельный `n8n`, развернутый рядом с `NEO`, а не внутри него.
+Используются procurement-webhook’и:
 
-Важный workflow:
-
-- `CommercialOfferAnalysis_MTR`
-
-В нем сейчас используются ветки:
-
-- `web-price` — поиск поставщиков
-- `generate-letters` — генерация писем
-- еще есть ветки для анализа КП / НМЦ
-
-## 7. Как сейчас работает поиск поставщиков
-
-Исторически было несколько вариантов.
-
-Текущий вариант:
-
-1. `NEO` отправляет в `n8n` один запрос на пакет.
-2. Внутри `n8n` поиск идет по позициям пакета.
-3. `n8n` агрегирует поставщиков и считает покрытие.
-4. В `NEO` приходит готовый список:
-
-- название
-- сайт
-- email
-- coverageCount
-- coverageRatio
-- matchedItems
-
-Порог покрытия и лимит поставщиков на позицию приходят из пакета:
-
-- `coverageThreshold`
-- `suppliersLimit`
-
-## 8. Как сейчас работает генерация писем
-
-Webhook:
-
+- `/webhook/procurement/web-price`
 - `/webhook/procurement/generate-letters`
+- `/webhook/procurement/analyze-kp`
+- `/webhook/procurement/nmc`
 
-В `n8n` цепочка генерации писем сейчас такая:
+`ProcurementN8nHelper` умеет:
 
-- `Webhook3`
-- `Prepare Letters Prompt`
-- `Letters Generator`
-- `Normalize Letters`
-- `Respond to Webhook3`
+- вытаскивать `output` из ответа `n8n`
+- парсить fenced JSON и текстовые JSON-строки
+- нормализовывать поля вроде `suppliers`, если они пришли строкой
 
-### 8.1. Что приходит из NEO в n8n
+Это важно, потому что ответы `n8n`/LLM не всегда приходят в идеально чистом JSON-формате.
 
-В payload передаются:
+## 8. Что важно помнить при доработках
 
-- `package`
-- `items`
-- `suppliers`
+### 8.1. Публичные контракты лучше не менять
 
-### 8.2. Что делает n8n
+Без отдельной миграции не стоит менять:
 
-#### `Prepare Letters Prompt`
+- имена `korus_ai_procurement__*`
+- порядок аргументов в `ComponentArgs`
+- shape payload для frontend `WORKSPACES.EXECUTE`
+- webhook paths `/webhook/procurement/*`
+- Liquibase-структуру таблиц `procurement__*`
 
-Собирает текст prompt из:
+### 8.2. По письмам
 
-- названия пакета
-- списка поставщиков
-- полного списка позиций
-
-#### `Letters Generator`
-
-LLM-узел, который возвращает строго JSON:
-
-```json
-{
-  "drafts": [
-    {
-      "supplierId": "uuid",
-      "supplierName": "Название поставщика",
-      "subject": "Тема письма",
-      "body": "Текст письма"
-    }
-  ]
-}
-```
-
-#### `Normalize Letters`
-
-Нормализует результат и принудительно формирует финальный текст письма.
-
-Сейчас важный смысл письма такой:
-
-- мы направляем поставщику перечень запрашиваемой номенклатуры
-- просим предоставить коммерческое предложение на поставку этой номенклатуры
-- в письме обязательно выводится весь список позиций, требований, количества и единиц измерения
-
-## 9. Что важно помнить при доработках
-
-### 9.1. Не ломать прод при деплое фронтенда
-
-Раньше уже была проблема, когда контейнер `neo-frontend` остался без статики и сайт начал отдавать `404`.
-
-Поэтому фронтенд лучше выкатывать безопасно:
-
-1. собрать `dist`
-2. скопировать в `html_build`
-3. потом атомарно заменить `html`
-
-### 9.2. Кеш index.html
-
-Ранее были проблемы со старым фронтенд-бандлом в браузере.
-
-Важно, что для `index.html` уже включали `no-store`, чтобы после деплоев не залипал старый JS.
-
-### 9.3. По письмам
-
-Если письма “дублируются”, первым делом проверять:
+Если письма “пропали” или “дублируются”, первым делом проверять:
 
 - очищаются ли старые записи в `procurement__letters`
+- смог ли backend сматчить draft из `n8n` на реального поставщика
 - не вернул ли `n8n` несколько draft-ов на одного поставщика
 
-### 9.4. По n8n
+### 8.3. По КП
 
-Если что-то меняется в workflow напрямую через БД, нужно:
+Если анализ КП не работает, первым делом проверять:
 
-- обновить `workflow_entity`
-- обновить активную запись в `workflow_history`
-- перезапустить контейнер `n8n`
+- существует ли `procurement__kp_documents` запись
+- доступен ли `file_id` в file storage
+- не упал ли OCR
+- что реально вернул `/webhook/procurement/analyze-kp`
 
-Иначе UI `n8n` и выполняемая версия могут разъехаться.
+### 8.4. По НМЦ
 
-## 10. Что сейчас уже работает
+Если НМЦ пустая или “странная”, первым делом проверять:
+
+- есть ли анализы для загруженных КП
+- заполнен ли `extracted_items_json`
+- не потерялся ли supplier mapping между `kp_documents` и `suppliers`
+
+## 9. Что сейчас уже работает
 
 Рабочие сценарии:
 
 - создание пакета
 - редактирование пакета
-- добавление и редактирование номенклатуры
+- добавление, редактирование и удаление номенклатуры
 - поиск поставщиков
 - выбор поставщиков из результатов поиска
 - перенос выбранных поставщиков в список поставщиков пакета
 - генерация писем по выбранным поставщикам
-
-Частично реализовано / требует дальнейшей шлифовки:
-
+- загрузка КП
 - анализ КП
-- повторная загрузка КП
+- повторная загрузка последнего сохраненного анализа
 - генерация НМЦ
-- финальная UX-полировка экранов
 
-## 11. Если продолжать работу в новом чате
+Отдельной шлифовки все еще могут требовать:
+
+- реальное качество ответов `n8n`
+- устойчивость OCR на сложных PDF/сканах
+- пользовательские тексты и UX-мелочи
+
+## 10. Если продолжать работу в новом чате
 
 Для быстрого старта полезно сразу открыть:
 
 - backend plugin:
   - `/home/ENikitina/apps/NEO/project-neo-be-procurement`
-- frontend procurement page:
-  - `/home/ENikitina/apps/NEO/project-neo-fe-dev/src/pages/procurement/ui/ProcurementPackagePage.tsx`
-  - `/home/ENikitina/apps/NEO/project-neo-fe-dev/src/pages/procurement/ui/ProcurementPage.tsx`
-  - `/home/ENikitina/apps/NEO/project-neo-fe-dev/src/pages/procurement/ui/ProcurementPage.css`
-- `n8n` workflow:
-  - `CommercialOfferAnalysis_MTR`
+- frontend procurement:
+  - `src/pages/procurement/ui/ProcurementPackagePage.tsx`
+  - `src/pages/procurement/hooks/useProcurementPackageData.ts`
+  - `src/pages/procurement/hooks/useProcurementSuppliers.ts`
+  - `src/pages/procurement/hooks/useProcurementDocuments.ts`
+  - `src/pages/procurement/ui/components/*`
+- документы:
+  - `__documentation/module_map.md`
+  - `__documentation/integration_contracts.md`
+  - `__documentation/db_schema.md`
 
-Если задача связана с письмами, смотреть в первую очередь:
+Если задача связана с конкретным сценарием, смотреть в первую очередь:
 
-- `LettersGenerate.java`
-- таб `Письма` во фронтенде
-- в `n8n` ветку:
-  - `Webhook3`
-  - `Prepare Letters Prompt`
-  - `Letters Generator`
-  - `Normalize Letters`
-
+- поиск поставщиков:
+  - `ProcurementSupplierSearchWorkflow.java`
+  - `SupplierSearch.java`
+- письма:
+  - `ProcurementLettersWorkflow.java`
+  - `LettersGenerate.java`
+- КП:
+  - `ProcurementKpAnalysisWorkflow.java`
+  - `KpUpload.java`
+  - `KpAnalyze.java`
+- НМЦ:
+  - `ProcurementNmcWorkflow.java`
+  - `NmcGenerate.java`

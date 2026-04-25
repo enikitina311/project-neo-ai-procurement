@@ -10,4 +10,5 @@ public interface ProcurementSupplierService extends DataService<ProcurementSuppl
     List<ProcurementSupplierDto> listByPackageId(UUID packageId);
     List<ProcurementSupplierDto> listSelectedByPackageId(UUID packageId);
     ProcurementSupplierDto updateSelected(UUID supplierId, boolean selected);
+    void deleteById(UUID supplierId);
 }

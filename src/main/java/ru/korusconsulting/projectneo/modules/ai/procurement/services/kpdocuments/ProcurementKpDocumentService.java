@@ -8,5 +8,6 @@ import ru.korusconsulting.projectneo.modules.ai.procurement.services.kpdocuments
 
 public interface ProcurementKpDocumentService extends DataService<ProcurementKpDocumentDto> {
     List<ProcurementKpDocumentDto> listByPackageId(UUID packageId);
-    List<ProcurementKpDocumentDto> listBySupplierId(UUID supplierId);
+    ProcurementKpDocumentDto updateSupplierName(UUID kpDocumentId, String supplierName);
+    void deleteById(UUID kpDocumentId);
 }

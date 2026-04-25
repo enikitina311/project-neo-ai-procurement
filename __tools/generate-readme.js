@@ -406,6 +406,8 @@ class ReadmeGenerator {
         lines.push('| Раздел | Описание | Документ |');
         lines.push('|--------|----------|----------|');
         lines.push('| Обзор сервиса | Архитектура, основные сценарии и интеграции | [service_overview.md](./__documentation/service_overview.md) |');
+        lines.push('| Карта модуля | Куда смотреть в backend/frontend по основным сценариям | [module_map.md](./__documentation/module_map.md) |');
+        lines.push('| Контракты интеграций | DataFunction, payload, n8n webhook и инварианты | [integration_contracts.md](./__documentation/integration_contracts.md) |');
         lines.push('| Схема данных | Таблицы и структура хранения procurement-модуля | [db_schema.md](./__documentation/db_schema.md) |');
         lines.push('| Smoke checklist | Ручные проверки после изменений backend/frontend | [manual_smoke_checklist.md](./__documentation/manual_smoke_checklist.md) |');
         lines.push('');
@@ -417,7 +419,7 @@ class ReadmeGenerator {
             lines.push('');
             lines.push('Отдельных `RestController` в этом репозитории не обнаружено, поэтому детальные спецификации API по контроллерам не генерируются.');
             lines.push('');
-            lines.push('Основные runtime-контракты для procurement-сценариев описаны в [service_overview.md](./__documentation/service_overview.md).');
+            lines.push('Основные runtime-контракты для procurement-сценариев описаны в [integration_contracts.md](./__documentation/integration_contracts.md).');
             lines.push('');
         } else {
             lines.push('API документация разделена по функциональным группам. Выберите нужную группу для просмотра детальной спецификации.');

@@ -14,6 +14,8 @@
 | Раздел | Описание | Документ |
 |--------|----------|----------|
 | Обзор сервиса | Архитектура, основные сценарии и интеграции | [service_overview.md](./__documentation/service_overview.md) |
+| Карта модуля | Куда смотреть в backend/frontend по основным сценариям | [module_map.md](./__documentation/module_map.md) |
+| Контракты интеграций | DataFunction, payload, n8n webhook и инварианты | [integration_contracts.md](./__documentation/integration_contracts.md) |
 | Схема данных | Таблицы и структура хранения procurement-модуля | [db_schema.md](./__documentation/db_schema.md) |
 | Smoke checklist | Ручные проверки после изменений backend/frontend | [manual_smoke_checklist.md](./__documentation/manual_smoke_checklist.md) |
 
@@ -23,7 +25,7 @@
 
 Отдельных `RestController` в этом репозитории не обнаружено, поэтому детальные спецификации API по контроллерам не генерируются.
 
-Основные runtime-контракты для procurement-сценариев описаны в [service_overview.md](./__documentation/service_overview.md).
+Основные runtime-контракты для procurement-сценариев описаны в [integration_contracts.md](./__documentation/integration_contracts.md).
 
 ## Сборка и развертывание
 

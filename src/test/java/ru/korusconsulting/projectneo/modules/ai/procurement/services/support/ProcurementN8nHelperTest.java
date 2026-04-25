@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 import ru.korusconsulting.projectneo.core.services.n8n.N8nService;
 
@@ -62,6 +63,22 @@ class ProcurementN8nHelperTest {
         assertThat(normalized.path("suppliers").isArray()).isTrue();
         assertThat(normalized.path("suppliers").size()).isEqualTo(2);
         assertThat(normalized.path("suppliers").get(1).path("name").asText()).isEqualTo("Beta");
+    }
+
+    @Test
+    void postShouldParseStringifiedEnvelopeWithNestedOutput() {
+        when(n8nService.post(eq("/webhook/procurement/web-price"), anyMap())).thenReturn(
+            TextNode.valueOf("{\"output\":\"{\\\"suppliers\\\":[{\\\"name\\\":\\\"Acme\\\"}]}\"}")
+        );
+
+        ProcurementN8nHelper.ParsedN8nResponse result = procurementN8nHelper.post(
+            "/webhook/procurement/web-price",
+            java.util.Map.of("query", "steel"));
+
+        assertThat(result.output()).isEqualTo("{\"suppliers\":[{\"name\":\"Acme\"}]}");
+        assertThat(result.parsed()).isNotNull();
+        assertThat(result.parsed().path("suppliers").isArray()).isTrue();
+        assertThat(result.parsed().path("suppliers").get(0).path("name").asText()).isEqualTo("Acme");
     }
 
     @Test
