@@ -12,6 +12,11 @@ module:
       description: "Схема таблиц для сервиса 'Ассистент закупок'"
       enabled: true
       order: 1
+    - name: "procurement-drop-cross-plugin-fk"
+      path: "config/procurement/database/procurement_002_drop_cross_plugin_fk.xml"
+      description: "Phase 2.6: drop cross-plugin FK constraints (soft refs to core.*)"
+      enabled: true
+      order: 2
 
 # Настройки модуля
 procurement:

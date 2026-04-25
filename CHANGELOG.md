@@ -13,6 +13,18 @@ breaking changes affect this plugin.
 
 _No unreleased changes._
 
+## [0.3.0] — 2026-04-26
+
+### Changed
+- **Phase 2.6: cross-plugin FK constraints dropped.** New
+  `procurement_002_drop_cross_plugin_fk.xml` (module.yml `order=2`)
+  drops all 17 hard FKs that pointed at `core.users` and
+  `core.projects`. Columns stay as soft UUIDs; integrity is now
+  app-level, per ARCHITECTURE_REFACTOR.md §7.3. Intra-plugin FKs
+  (packages / suppliers / kp_documents) are untouched.
+- `requiredCoreVersion` stays `>=0.2.0` — Phase 2.6 does not require a
+  new core release.
+
 ## [0.2.0] — 2026-04-26
 
 ### Changed (BREAKING)

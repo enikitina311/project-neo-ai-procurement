@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- ========================================================= -->
+    <!-- Phase 2.6: drop cross-plugin FK constraints.                -->
+    <!-- See ARCHITECTURE_REFACTOR.md §7.3 — soft references only    -->
+    <!-- across schemas. UUID columns remain; integrity is enforced  -->
+    <!-- at the application layer via core service APIs.             -->
+    <!-- ========================================================= -->
+
+    <changeSet id="procurement-002-drop-cross-plugin-fk" author="system">
+        <!-- procurement.packages -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="packages"
+            constraintName="fk_procurement_packages_project_id" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="packages"
+            constraintName="fk_procurement_packages_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="packages"
+            constraintName="fk_procurement_packages_updated_by" />
+
+        <!-- procurement.items -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="items"
+            constraintName="fk_procurement_items_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="items"
+            constraintName="fk_procurement_items_updated_by" />
+
+        <!-- procurement.suppliers -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="suppliers"
+            constraintName="fk_procurement_suppliers_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="suppliers"
+            constraintName="fk_procurement_suppliers_updated_by" />
+
+        <!-- procurement.letters -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="letters"
+            constraintName="fk_procurement_letters_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="letters"
+            constraintName="fk_procurement_letters_updated_by" />
+
+        <!-- procurement.kp_documents -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_documents"
+            constraintName="fk_procurement_kp_documents_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_documents"
+            constraintName="fk_procurement_kp_documents_updated_by" />
+
+        <!-- procurement.kp_analysis -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_analysis"
+            constraintName="fk_procurement_kp_analysis_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_analysis"
+            constraintName="fk_procurement_kp_analysis_updated_by" />
+
+        <!-- procurement.nmc_results -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="nmc_results"
+            constraintName="fk_procurement_nmc_results_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="nmc_results"
+            constraintName="fk_procurement_nmc_results_updated_by" />
+
+        <!-- procurement.supplier_search_runs -->
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="supplier_search_runs"
+            constraintName="fk_procurement_supplier_search_runs_created_by" />
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="supplier_search_runs"
+            constraintName="fk_procurement_supplier_search_runs_updated_by" />
+    </changeSet>
+
+</databaseChangeLog>
