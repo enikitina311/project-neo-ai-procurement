@@ -75,21 +75,6 @@
             onDelete="RESTRICT" />
     </changeSet>
 
-    <changeSet id="procurement-kp-documents-with-detected-supplier" author="codex">
-        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_documents"
-            constraintName="fk_procurement_kp_documents_supplier_id" />
-
-        <dropIndex indexName="idx_procurement_kp_documents_supplier_id"
-            schemaName="procurement" tableName="kp_documents" />
-
-        <dropColumn schemaName="procurement" tableName="kp_documents" columnName="supplier_id" />
-
-        <addColumn schemaName="procurement" tableName="kp_documents">
-            <column name="file_name" type="text" />
-            <column name="supplier_name" type="text" />
-        </addColumn>
-    </changeSet>
-
     <changeSet id="procurement-packages-coverage-threshold" author="system">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -109,63 +94,6 @@
         </preConditions>
         <addColumn schemaName="procurement" tableName="packages">
             <column name="suppliers_limit" type="int" defaultValueNumeric="10" />
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="procurement-kp-analysis-supplier-name" author="codex">
-        <addColumn schemaName="procurement" tableName="kp_analysis">
-            <column name="supplier_name" type="text" />
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="procurement-kp-analysis-source-text" author="codex">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="source_text" />
-            </not>
-        </preConditions>
-        <addColumn schemaName="procurement" tableName="kp_analysis">
-            <column name="source_text" type="text" />
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="procurement-kp-analysis-summary" author="codex">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="summary" />
-            </not>
-        </preConditions>
-        <addColumn schemaName="procurement" tableName="kp_analysis">
-            <column name="summary" type="text" />
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="procurement-kp-analysis-criteria-evaluation-json" author="codex">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="criteria_evaluation_json" />
-            </not>
-        </preConditions>
-        <addColumn schemaName="procurement" tableName="kp_analysis">
-            <column name="criteria_evaluation_json" type="text" />
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="procurement-kp-analysis-two-step-fields" author="codex">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="extraction_status" />
-            </not>
-        </preConditions>
-        <addColumn schemaName="procurement" tableName="kp_analysis">
-            <column name="extraction_status" type="varchar(50)" />
-            <column name="analysis_status" type="varchar(50)" />
-            <column name="extracted_at" type="timestamp with time zone" />
-            <column name="analyzed_at" type="timestamp with time zone" />
-            <column name="extracted_facts_json" type="text" />
-            <column name="standard_checks_json" type="text" />
-            <column name="total_without_vat" type="text" />
-            <column name="total_with_vat" type="text" />
         </addColumn>
     </changeSet>
 
@@ -481,6 +409,30 @@
             onDelete="RESTRICT" />
     </changeSet>
 
+    <!--
+        kp_documents was originally created with a hard FK to suppliers (via
+        supplier_id). The "with-detected-supplier" rework drops that FK and
+        replaces supplier_id with a free-text supplier_name pulled out of the
+        document during extraction. Must run AFTER the create above; on a
+        fresh install the relocate of this changeset (Phase 2.5.7) restored
+        that ordering — previously it sat near the top of the file and broke
+        fresh-DB boots.
+    -->
+    <changeSet id="procurement-kp-documents-with-detected-supplier" author="codex">
+        <dropForeignKeyConstraint baseTableSchemaName="procurement" baseTableName="kp_documents"
+            constraintName="fk_procurement_kp_documents_supplier_id" />
+
+        <dropIndex indexName="idx_procurement_kp_documents_supplier_id"
+            schemaName="procurement" tableName="kp_documents" />
+
+        <dropColumn schemaName="procurement" tableName="kp_documents" columnName="supplier_id" />
+
+        <addColumn schemaName="procurement" tableName="kp_documents">
+            <column name="file_name" type="text" />
+            <column name="supplier_name" type="text" />
+        </addColumn>
+    </changeSet>
+
     <!-- ========================================================= -->
     <!-- PROCUREMENT KP ANALYSIS -->
     <!-- ========================================================= -->
@@ -542,6 +494,70 @@
             referencedTableSchemaName="core" referencedTableName="users"
             referencedColumnNames="id"
             onDelete="RESTRICT" />
+    </changeSet>
+
+    <!--
+        kp_analysis evolutions: a sequence of additive column additions that
+        accumulated over time. Originally placed near the top of the file
+        (Phase 0 of procurement) — this is the legacy chronological order, not
+        the right ORDER for fresh-install runs. Phase 2.5.7 moves them after
+        the create above so a clean DB boots end-to-end.
+    -->
+    <changeSet id="procurement-kp-analysis-supplier-name" author="codex">
+        <addColumn schemaName="procurement" tableName="kp_analysis">
+            <column name="supplier_name" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-source-text" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="source_text" />
+            </not>
+        </preConditions>
+        <addColumn schemaName="procurement" tableName="kp_analysis">
+            <column name="source_text" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-summary" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="summary" />
+            </not>
+        </preConditions>
+        <addColumn schemaName="procurement" tableName="kp_analysis">
+            <column name="summary" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-criteria-evaluation-json" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="criteria_evaluation_json" />
+            </not>
+        </preConditions>
+        <addColumn schemaName="procurement" tableName="kp_analysis">
+            <column name="criteria_evaluation_json" type="text" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="procurement-kp-analysis-two-step-fields" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="procurement" tableName="kp_analysis" columnName="extraction_status" />
+            </not>
+        </preConditions>
+        <addColumn schemaName="procurement" tableName="kp_analysis">
+            <column name="extraction_status" type="varchar(50)" />
+            <column name="analysis_status" type="varchar(50)" />
+            <column name="extracted_at" type="timestamp with time zone" />
+            <column name="analyzed_at" type="timestamp with time zone" />
+            <column name="extracted_facts_json" type="text" />
+            <column name="standard_checks_json" type="text" />
+            <column name="total_without_vat" type="text" />
+            <column name="total_with_vat" type="text" />
+        </addColumn>
     </changeSet>
 
     <!-- ========================================================= -->
