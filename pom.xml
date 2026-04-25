@@ -15,6 +15,7 @@
         <liquibase.version>4.23.2</liquibase.version>
         <postgresql.version>42.6.0</postgresql.version>
         <slf4j.version>2.0.9</slf4j.version>
+        <archunit.version>1.3.0</archunit.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
@@ -42,6 +43,16 @@
         <dependency>
             <groupId>ru.korusconsulting.projectneo</groupId>
             <artifactId>core</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Phase 2.3: ServiceModule contract lives in the SDK. Declared explicitly
+             because core's published POM cannot resolve its own ${project.version}
+             property for downstream plugins (no parent POM in plugin repos). -->
+        <dependency>
+            <groupId>ru.korusconsulting.projectneo</groupId>
+            <artifactId>plugin-sdk</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -176,6 +187,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Phase 2.4: ArchUnit gate that procurement does not import other plugins. -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${archunit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
