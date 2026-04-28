@@ -1,4 +1,6 @@
 node_modules
-dist
 *.log
+# dist/ tracked: plugin frontends ship pre-built artifacts (Phase 8.2.x).
+# Host Dockerfile copies dist directly without running npm build per-plugin.
+# Запустить `npm run build` локально перед commit/push.
 .DS_Store

@@ -1,0 +1,22 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useTranslation } from "react-i18next";
+import { Button, Input, Label, SectionHeader, Tag, TextArea, } from "@enikitina311/ui";
+import { Package } from "lucide-react";
+export function ProcurementPackageSidebar({ coverageThreshold, criteria, expandButton, hasUnsavedChanges, isCreateMode, isSaveDisabled, onBackToList, onCoverageThresholdChange, onCreatePackage, onCriteriaChange, onNameChange, onSuppliersLimitChange, onUpdatePackage, packageName, suppliersLimit, }) {
+    const { t } = useTranslation("procurement");
+    const { t: tCommon } = useTranslation("common");
+    const statusVariant = isCreateMode
+        ? "secondary"
+        : hasUnsavedChanges
+            ? "warning"
+            : "success";
+    const statusLabel = isCreateMode
+        ? hasUnsavedChanges
+            ? t("labels.draftLot")
+            : t("labels.newLot")
+        : hasUnsavedChanges
+            ? t("labels.unsavedChanges")
+            : t("labels.savedChanges");
+    return (_jsxs("div", { className: "procurement-sidebar", children: [_jsx(SectionHeader, { icon: _jsx(Package, {}), title: t("sections.packageInfo"), actions: expandButton }), _jsx("div", { className: "procurement-sidebar-status", children: _jsx(Tag, { variant: statusVariant, size: "sm", className: "procurement-sidebar-tag", children: statusLabel }) }), _jsxs("div", { className: "procurement-sidebar-body", children: [_jsxs("section", { className: "procurement-sidebar-section", children: [_jsxs("div", { className: "procurement-sidebar-section-header", children: [_jsx("h3", { className: "procurement-sidebar-section-title", children: t("sections.lotBasics") }), _jsx("p", { className: "procurement-sidebar-section-description", children: t("labels.lotBasicsHelper") })] }), _jsxs("div", { className: "procurement-sidebar-fields", children: [_jsxs("div", { className: "procurement-sidebar-field flex flex-col gap-1", children: [_jsx(Label, { children: t("fields.packageName") }), _jsx(Input, { value: packageName, onChange: (event) => onNameChange(event.target.value) }), _jsx("div", { className: "procurement-field-helper", children: t("labels.packageNameHelper") })] }), _jsxs("div", { className: "procurement-sidebar-field flex flex-col gap-1", children: [_jsx(Label, { children: t("fields.criteria") }), _jsx(TextArea, { value: criteria, placeholder: t("placeholders.criteria"), onChange: (event) => onCriteriaChange(event.target.value), autoResize: true, minHeight: 96, maxHeight: 320 }), _jsx("div", { className: "procurement-field-helper", children: t("labels.criteriaHelper") })] })] })] }), _jsxs("section", { className: "procurement-sidebar-section", children: [_jsxs("div", { className: "procurement-sidebar-section-header", children: [_jsx("h3", { className: "procurement-sidebar-section-title", children: t("sections.selectionParameters") }), _jsx("p", { className: "procurement-sidebar-section-description", children: t("labels.selectionParametersHelper") })] }), _jsxs("div", { className: "procurement-sidebar-fields", children: [_jsxs("div", { className: "procurement-sidebar-field flex flex-col gap-1", children: [_jsx(Label, { children: t("fields.coverageThreshold") }), _jsx(Input, { type: "number", value: coverageThreshold, onChange: (event) => onCoverageThresholdChange(event.target.value) }), _jsx("div", { className: "procurement-field-helper", children: t("labels.coverageThresholdHelper") })] }), _jsxs("div", { className: "procurement-sidebar-field flex flex-col gap-1", children: [_jsx(Label, { children: t("fields.suppliersLimit") }), _jsx(Input, { type: "number", value: suppliersLimit, onChange: (event) => onSuppliersLimitChange(event.target.value) }), _jsx("div", { className: "procurement-field-helper", children: t("labels.suppliersLimitHelper") })] })] })] })] }), _jsxs("div", { className: "procurement-sidebar-actions", children: [isCreateMode ? (_jsx(Button, { onClick: onCreatePackage, disabled: isSaveDisabled, fullWidth: true, children: t("actions.createPackage") })) : (_jsx(Button, { onClick: onUpdatePackage, disabled: isSaveDisabled, fullWidth: true, children: t("actions.savePackage") })), _jsx(Button, { variant: "outline", onClick: onBackToList, fullWidth: true, children: tCommon("actions.cancel") })] })] }));
+}
+//# sourceMappingURL=ProcurementPackageSidebar.js.map

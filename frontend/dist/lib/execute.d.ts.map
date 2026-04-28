@@ -1,0 +1,1 @@
+{"version":3,"file":"execute.d.ts","sourceRoot":"","sources":["../../src/lib/execute.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,gBAAgB,CAAC;AAErD,KAAK,aAAa,GAAG,cAAc,CAAC,QAAQ,CAAC,CAAC;AAE9C,wBAAgB,8BAA8B,CAC5C,YAAY,EAAE,MAAM,EACpB,MAAM,EAAE,aAAa,EACrB,SAAS,CAAC,EAAE,MAAM,GAAG,IAAI,EACzB,SAAS,CAAC,EAAE,MAAM,GAAG,IAAI,GACxB,cAAc,CAWhB"}
