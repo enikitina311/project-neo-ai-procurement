@@ -1,7 +1,14 @@
+import { lazy } from "react";
 import type { ServiceManifest } from "@enikitina311/plugin-sdk-fe";
 import { Package } from "lucide-react";
 
-import { ProcurementPage, ProcurementPackagePage } from "./pages";
+const ProcurementPage = lazy(() =>
+  import("./pages").then((m) => ({ default: m.ProcurementPage })),
+);
+const ProcurementPackagePage = lazy(() =>
+  import("./pages").then((m) => ({ default: m.ProcurementPackagePage })),
+);
+
 import { procurementRu as ru } from "./locales/ru";
 import { procurementEn as en } from "./locales/en";
 
