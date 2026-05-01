@@ -78,7 +78,7 @@ export const parseProcurementNmcTableJson = (raw) => {
     }
 };
 const execute = async (payload) => {
-    const { data } = await getApi().post("/workspaces/execute", payload);
+    const { data } = await getApi().post("/workspaces/actions/execute", payload);
     return data.result;
 };
 export const listPackages = (payload) => execute(payload);
@@ -91,7 +91,7 @@ export const updateItem = (payload) => execute(payload);
 export const deleteItem = (payload) => execute(payload);
 export const listSuppliers = (payload) => execute(payload);
 export const supplierSearch = async (payload, signal) => {
-    const { data } = await getApi().post("/workspaces/execute", payload, { timeout: 180000, signal });
+    const { data } = await getApi().post("/workspaces/actions/execute", payload, { timeout: 180000, signal });
     return data.result;
 };
 export const supplierSearchStart = (payload) => execute(payload);

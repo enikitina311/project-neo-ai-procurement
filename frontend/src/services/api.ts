@@ -272,7 +272,7 @@ export const parseProcurementNmcTableJson = (
 
 const execute = async <T>(payload: ExecutePayload): Promise<T> => {
   const { data } = await getApi().post<{ result: T }>(
-    "/workspaces/execute",
+    "/workspaces/actions/execute",
     payload,
   );
   return data.result;
@@ -310,7 +310,7 @@ export const supplierSearch = async (
   signal?: AbortSignal,
 ) => {
   const { data } = await getApi().post<{ result: SupplierSearchResult }>(
-    "/workspaces/execute",
+    "/workspaces/actions/execute",
     payload,
     { timeout: 180000, signal },
   );
