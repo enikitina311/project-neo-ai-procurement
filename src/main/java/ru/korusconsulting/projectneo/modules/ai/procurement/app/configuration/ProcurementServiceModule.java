@@ -8,11 +8,11 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import ru.korusconsulting.projectneo.sdk.assistant.AssistantTool;
+import ru.korusconsulting.projectneo.sdk.module.ProjectCategory;
 import ru.korusconsulting.projectneo.sdk.module.ProvisioningContext;
 import ru.korusconsulting.projectneo.sdk.module.ServiceDependency;
 import ru.korusconsulting.projectneo.sdk.module.ServiceModule;
 import ru.korusconsulting.projectneo.sdk.module.ServiceScope;
-import ru.korusconsulting.projectneo.sdk.module.WorkspaceCategory;
 
 /**
  * Phase 2.3 declarative manifest for the procurement plugin.
@@ -33,12 +33,13 @@ public class ProcurementServiceModule implements ServiceModule {
 
     @Override
     public String version() {
-        return "0.3.0";
+        return "0.4.0";
     }
 
     @Override
     public String requiredCoreVersion() {
-        return ">=0.2.0";
+        // Phase 9.E: requires plugin-sdk method names renamed Workspace → Project.
+        return ">=0.16.0";
     }
 
     @Override
@@ -57,8 +58,8 @@ public class ProcurementServiceModule implements ServiceModule {
     }
 
     @Override
-    public Set<WorkspaceCategory> applicableCategories() {
-        return EnumSet.of(WorkspaceCategory.PROJECT, WorkspaceCategory.AREA);
+    public Set<ProjectCategory> applicableCategories() {
+        return EnumSet.of(ProjectCategory.PROJECT, ProjectCategory.AREA);
     }
 
     @Override
@@ -77,10 +78,10 @@ public class ProcurementServiceModule implements ServiceModule {
     }
 
     @Override
-    public void onWorkspaceServiceEnabled(ProvisioningContext ctx) {
+    public void onProjectServiceEnabled(ProvisioningContext ctx) {
     }
 
     @Override
-    public void onWorkspaceServiceDisabled(ProvisioningContext ctx) {
+    public void onProjectServiceDisabled(ProvisioningContext ctx) {
     }
 }
