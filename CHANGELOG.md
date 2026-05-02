@@ -13,17 +13,6 @@ breaking changes affect this plugin.
 
 _No unreleased changes._
 
-## [0.4.0] — 2026-05-02
-
-### Changed
-
-- **Adopt plugin-sdk Workspace → Project rename (Phase 9.E).**
-  `ProcurementServiceModule` updated:
-  - `Set<WorkspaceCategory>` → `Set<ProjectCategory>`
-  - `onWorkspaceServiceEnabled/Disabled` → `onProjectServiceEnabled/Disabled`
-  - `requiredCoreVersion` bumped 0.2.0 → 0.16.0
-  - Wire-format string values unchanged — pure type-system rename.
-
 ## [0.3.0] — 2026-04-26
 
 ### Changed
