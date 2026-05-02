@@ -16,7 +16,7 @@ import ru.korusconsulting.projectneo.core.services.provision.ProvisionService;
 import ru.korusconsulting.projectneo.core.services.provision.config.DatabaseConfig;
 import ru.korusconsulting.projectneo.core.services.systemorchestrator.SystemOrchestratorService;
 import ru.korusconsulting.projectneo.core.services.workspace.project.ProjectService;
-import ru.korusconsulting.projectneo.core.services.workspace.project.theme.ProjectThemeService;
+import ru.korusconsulting.projectneo.core.services.workspace.project.theme.WorkspaceThemeService;
 
 import java.io.InputStream;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ProcurementConfiguration {
     private BaseConfigurationService<CoreConfigurationResponse> configurationService;
     private SystemOrchestratorService systemOrchestratorService;
     private ProjectService projectService;
-    private ProjectThemeService projectThemeService;
+    private WorkspaceThemeService projectThemeService;
     private ProvisionService provisionService;
 
     @Bean
@@ -127,7 +127,7 @@ public class ProcurementConfiguration {
     }
 
     @Autowired(required = false)
-    public void setProjectThemeService(ProjectThemeService projectThemeService) {
+    public void setWorkspaceThemeService(WorkspaceThemeService projectThemeService) {
         this.projectThemeService = projectThemeService;
     }
 
@@ -155,7 +155,7 @@ public class ProcurementConfiguration {
         return projectService;
     }
 
-    public ProjectThemeService getProjectThemeService() {
+    public WorkspaceThemeService getWorkspaceThemeService() {
         return projectThemeService;
     }
 }
