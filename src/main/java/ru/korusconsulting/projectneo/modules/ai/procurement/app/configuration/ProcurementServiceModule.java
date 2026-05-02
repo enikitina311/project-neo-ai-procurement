@@ -54,7 +54,7 @@ public class ProcurementServiceModule implements ServiceModule {
 
     @Override
     public ServiceScope scope() {
-        return ServiceScope.PROJECT;
+        return ServiceScope.WORKSPACE;
     }
 
     @Override
