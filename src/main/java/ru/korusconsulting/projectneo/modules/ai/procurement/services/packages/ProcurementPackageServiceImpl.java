@@ -37,22 +37,22 @@ public class ProcurementPackageServiceImpl extends BaseDataServiceImpl<Procureme
             repository,
             ProcurementPackage.class,
             ProcurementPackageDto.class,
-            new String[] {"project_id", "name", "criteria_text", "coverage_threshold", "suppliers_limit"},
+            new String[] {"workspace_id", "name", "criteria_text", "coverage_threshold", "suppliers_limit"},
             (ProcurementPackageDtoRequest r) -> new Object[] {
-                r.getProjectId(),
+                r.getWorkspaceId(),
                 r.getName(),
                 r.getCriteriaText(),
                 r.getCoverageThreshold(),
                 r.getSuppliersLimit()
             },
             (ProcurementPackageDtoRequest r) -> Arrays.asList(
-                FieldCondition.of("project_id", "=", r.getProjectId())
+                FieldCondition.of("workspace_id", "=", r.getWorkspaceId())
             )
         );
     }
 
     @Override
-    public List<ProcurementPackageDto> listByProjectId(UUID projectId) {
-        return findByField("project_id", projectId);
+    public List<ProcurementPackageDto> listByWorkspaceId(UUID workspaceId) {
+        return findByField("workspace_id", workspaceId);
     }
 }

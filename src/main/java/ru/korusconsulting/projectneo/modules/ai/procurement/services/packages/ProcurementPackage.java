@@ -12,7 +12,7 @@ import ru.korusconsulting.projectneo.modules.ai.procurement.services.packages.ma
 @CoreMapping(source = ProcurementPackageModel.class, mapperClass = ProcurementPackageMapper.class)
 public class ProcurementPackage implements CoreEntity<ProcurementPackage, ProcurementPackageModel> {
     private UUID id;
-    private UUID projectId;
+    private UUID workspaceId;
     private String name;
     private String criteriaText;
     private Double coverageThreshold;

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!--
+        Phase 11 (2026-05-03) — Plugin procurement: rename column project_id → workspace_id.
+
+        Affected tables (1):
+          - procurement.packages.project_id
+
+        FK fk_procurement_packages_project_id уже dropped в procurement_002.
+        Index idx_procurement_packages_project_id renamed для cosmetic-чистоты.
+    -->
+
+    <changeSet id="phase11-procurement-rename-project-id-columns" author="system" runOnChange="false">
+        <preConditions onFail="MARK_RAN">
+            <columnExists schemaName="procurement" tableName="packages" columnName="project_id"/>
+        </preConditions>
+
+        <renameColumn schemaName="procurement" tableName="packages"
+                      oldColumnName="project_id" newColumnName="workspace_id" columnDataType="uuid"/>
+    </changeSet>
+
+    <changeSet id="phase11-procurement-rename-project-id-indexes" author="system" runOnChange="false">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="idx_procurement_packages_project_id"/>
+        </preConditions>
+
+        <sql>ALTER INDEX procurement.idx_procurement_packages_project_id RENAME TO idx_procurement_packages_workspace_id</sql>
+    </changeSet>
+
+</databaseChangeLog>

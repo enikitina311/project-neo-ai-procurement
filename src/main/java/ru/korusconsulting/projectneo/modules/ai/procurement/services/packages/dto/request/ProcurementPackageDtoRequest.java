@@ -8,7 +8,7 @@ import ru.korusconsulting.projectneo.core.common.repositories.Identifiable;
 @Data
 public class ProcurementPackageDtoRequest implements Identifiable<UUID> {
     private UUID id;
-    private UUID projectId;
+    private UUID workspaceId;
     private String name;
     private String criteriaText;
     private Double coverageThreshold;

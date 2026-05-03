@@ -15,8 +15,8 @@ import ru.korusconsulting.projectneo.core.services.database.DatabaseService;
 import ru.korusconsulting.projectneo.core.services.provision.ProvisionService;
 import ru.korusconsulting.projectneo.core.services.provision.config.DatabaseConfig;
 import ru.korusconsulting.projectneo.core.services.systemorchestrator.SystemOrchestratorService;
-import ru.korusconsulting.projectneo.core.services.workspace.project.WorkspaceCrudService;
-import ru.korusconsulting.projectneo.core.services.workspace.project.theme.WorkspaceThemeService;
+import ru.korusconsulting.projectneo.core.services.workspace.WorkspaceCrudService;
+import ru.korusconsulting.projectneo.core.services.workspace.theme.WorkspaceThemeService;
 
 import java.io.InputStream;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ProcurementConfiguration {
     private DatabaseService databaseService;
     private BaseConfigurationService<CoreConfigurationResponse> configurationService;
     private SystemOrchestratorService systemOrchestratorService;
-    private WorkspaceCrudService projectService;
+    private WorkspaceCrudService workspaceService;
     private WorkspaceThemeService projectThemeService;
     private ProvisionService provisionService;
 
@@ -122,8 +122,8 @@ public class ProcurementConfiguration {
     }
 
     @Autowired(required = false)
-    public void setWorkspaceCrudService(WorkspaceCrudService projectService) {
-        this.projectService = projectService;
+    public void setWorkspaceCrudService(WorkspaceCrudService workspaceService) {
+        this.workspaceService = workspaceService;
     }
 
     @Autowired(required = false)
@@ -152,7 +152,7 @@ public class ProcurementConfiguration {
     }
 
     public WorkspaceCrudService getWorkspaceCrudService() {
-        return projectService;
+        return workspaceService;
     }
 
     public WorkspaceThemeService getWorkspaceThemeService() {

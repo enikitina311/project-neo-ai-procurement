@@ -13,7 +13,7 @@ import ru.korusconsulting.projectneo.modules.ai.procurement.services.packages.ma
 @EqualsAndHashCode(callSuper = false)
 @CoreMapping(source = ProcurementPackage.class, mapperClass = ProcurementPackageDtoMapper.class)
 public class ProcurementPackageDto extends CoreBaseDtoImpl<ProcurementPackageDto, ProcurementPackage> {
-    private UUID projectId;
+    private UUID workspaceId;
     private String name;
     private String criteriaText;
     private Double coverageThreshold;

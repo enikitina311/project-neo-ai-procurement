@@ -18,6 +18,12 @@ module:
       enabled: true
       order: 2
 
+    - name: "procurement-rename-project-id-columns"
+      path: "config/procurement/database/procurement_003_rename_project_id_columns.xml"
+      description: "Phase 11 (2026-05-03): renames procurement.packages.project_id to workspace_id, synced with core_009"
+      enabled: true
+      order: 3
+
 # Настройки модуля
 procurement:
   processing:

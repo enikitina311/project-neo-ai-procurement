@@ -19,15 +19,15 @@ public class PackageCreate extends DataFunctionBase implements DataFunction {
 
     @Override
     public String description() {
-        return "Create procurement package: project_id, name, criteria_text?, coverage_threshold?, suppliers_limit?";
+        return "Create procurement package: workspace_id, name, criteria_text?, coverage_threshold?, suppliers_limit?";
     }
 
     @Override
     public Object execute(ComponentArgs args) {
-        ProcurementFunctionArgs.requireMinArgs(args, 2, "Expected at least 2 arguments: project_id, name");
+        ProcurementFunctionArgs.requireMinArgs(args, 2, "Expected at least 2 arguments: workspace_id, name");
 
         ProcurementPackageDtoRequest request = new ProcurementPackageDtoRequest();
-        request.setProjectId(ProcurementFunctionArgs.uuid(args, 0));
+        request.setWorkspaceId(ProcurementFunctionArgs.uuid(args, 0));
         request.setName(ProcurementFunctionArgs.string(args, 1));
         request.setCriteriaText(ProcurementFunctionArgs.optionalString(args, 2));
         request.setCoverageThreshold(ProcurementFunctionArgs.doubleOrDefault(args, 3, 0.7));

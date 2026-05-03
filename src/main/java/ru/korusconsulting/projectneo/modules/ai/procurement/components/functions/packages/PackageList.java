@@ -18,16 +18,16 @@ public class PackageList extends DataFunctionBase implements DataFunction {
 
     @Override
     public String description() {
-        return "List procurement packages by project_id";
+        return "List procurement packages by workspace_id";
     }
 
     @Override
     public Object execute(ComponentArgs args) {
         if (args.values.isEmpty()) {
-            throw new IllegalArgumentException("Expected 1 argument: project_id");
+            throw new IllegalArgumentException("Expected 1 argument: workspace_id");
         }
 
         return AppContext.tryGet(ProcurementPackageService.class)
-            .listByProjectId(ObjectExtensions.toUuidSafe(args.values.get(0)));
+            .listByWorkspaceId(ObjectExtensions.toUuidSafe(args.values.get(0)));
     }
 }

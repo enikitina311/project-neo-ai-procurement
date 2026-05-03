@@ -11,7 +11,7 @@ import ru.korusconsulting.projectneo.core.common.repositories.Identifiable;
 @Table("procurement.packages")
 public class ProcurementPackageModel implements Identifiable<UUID> {
     private UUID id;
-    private UUID projectId;
+    private UUID workspaceId;
     private String name;
     private String criteriaText;
     private Double coverageThreshold;
