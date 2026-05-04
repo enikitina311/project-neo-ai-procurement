@@ -41,8 +41,7 @@ public class ProcurementApp extends BaseSolution {
 
         new ProcurementDeployment(
                 this.appConfig.getDatabaseService(),
-                this.appConfig.getSystemOrchestratorService(),
-                this.appConfig.getProvisionService(),
+                this.host,
                 moduleConfig,
                 this.getClass().getClassLoader()).setup();
 

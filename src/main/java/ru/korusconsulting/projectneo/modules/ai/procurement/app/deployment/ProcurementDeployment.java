@@ -7,8 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.korusconsulting.projectneo.core.services.database.DatabaseService;
-import ru.korusconsulting.projectneo.core.services.provision.ProvisionService;
-import ru.korusconsulting.projectneo.core.services.systemorchestrator.SystemOrchestratorService;
+import ru.korusconsulting.projectneo.core.services.host.PluginHostServices;
 import ru.korusconsulting.projectneo.core.services.systemorchestrator.configuration.dto.request.EnsureServiceConfigurationRequest;
 import ru.korusconsulting.projectneo.core.services.systemorchestrator.dto.request.EnsureServiceRequest;
 import ru.korusconsulting.projectneo.modules.ai.procurement.Const;
@@ -25,20 +24,17 @@ public class ProcurementDeployment {
     private static final Logger log = LoggerFactory.getLogger(ProcurementDeployment.class);
 
     private final DatabaseService databaseService;
-    private final SystemOrchestratorService systemOrchestratorService;
-    private final ProvisionService provisionService;
+    private final PluginHostServices host;
     private final ProcurementModule moduleConfig;
     private final ClassLoader classLoader;
 
     public ProcurementDeployment(
             DatabaseService databaseService,
-            SystemOrchestratorService systemOrchestratorService,
-            ProvisionService provisionService,
+            PluginHostServices host,
             ProcurementModule moduleConfig,
             ClassLoader classLoader) {
         this.databaseService = databaseService;
-        this.systemOrchestratorService = systemOrchestratorService;
-        this.provisionService = provisionService;
+        this.host = host;
         this.moduleConfig = moduleConfig;
         this.classLoader = classLoader;
     }
@@ -77,7 +73,7 @@ public class ProcurementDeployment {
 
             log.info("Found {} database configuration(s) in module.yml", moduleConfig.getDatabase().size());
 
-            provisionService.provision(moduleConfig, classLoader);
+            host.provisioning().provision(moduleConfig, classLoader);
 
             log.info("✓ Database schema provisioned successfully");
         } catch (Exception e) {
@@ -115,7 +111,7 @@ public class ProcurementDeployment {
                     .configuration(configurations)
                     .build();
 
-            this.systemOrchestratorService.registerService(service);
+            this.host.lifecycle().registerService(service);
 
             log.info("✓ Configuration initialized successfully");
         } catch (Exception e) {

@@ -12,11 +12,7 @@ import ru.korusconsulting.projectneo.core.common.support.YamlPropertySourceFacto
 import ru.korusconsulting.projectneo.core.services.configuration.base.BaseConfigurationService;
 import ru.korusconsulting.projectneo.core.services.configuration.dto.response.CoreConfigurationResponse;
 import ru.korusconsulting.projectneo.core.services.database.DatabaseService;
-import ru.korusconsulting.projectneo.core.services.provision.ProvisionService;
 import ru.korusconsulting.projectneo.core.services.provision.config.DatabaseConfig;
-import ru.korusconsulting.projectneo.core.services.systemorchestrator.SystemOrchestratorService;
-import ru.korusconsulting.projectneo.core.services.workspace.WorkspaceCrudService;
-import ru.korusconsulting.projectneo.core.services.workspace.theme.WorkspaceThemeService;
 
 import java.io.InputStream;
 import java.util.List;
@@ -37,10 +33,6 @@ public class ProcurementConfiguration {
 
     private DatabaseService databaseService;
     private BaseConfigurationService<CoreConfigurationResponse> configurationService;
-    private SystemOrchestratorService systemOrchestratorService;
-    private WorkspaceCrudService workspaceService;
-    private WorkspaceThemeService projectThemeService;
-    private ProvisionService provisionService;
 
     @Bean
     public ProcurementSettings procurementSettings() {
@@ -111,26 +103,6 @@ public class ProcurementConfiguration {
         this.configurationService = configurationService;
     }
 
-    @Autowired(required = false)
-    public void setSystemOrchestratorService(SystemOrchestratorService systemOrchestratorService) {
-        this.systemOrchestratorService = systemOrchestratorService;
-    }
-
-    @Autowired(required = false)
-    public void setProvisionService(ProvisionService provisionService) {
-        this.provisionService = provisionService;
-    }
-
-    @Autowired(required = false)
-    public void setWorkspaceCrudService(WorkspaceCrudService workspaceService) {
-        this.workspaceService = workspaceService;
-    }
-
-    @Autowired(required = false)
-    public void setWorkspaceThemeService(WorkspaceThemeService projectThemeService) {
-        this.projectThemeService = projectThemeService;
-    }
-
     public ProcurementSettings getProcurementSettings() {
         return procurementSettings();
     }
@@ -141,21 +113,5 @@ public class ProcurementConfiguration {
 
     public BaseConfigurationService<CoreConfigurationResponse> getConfigurationService() {
         return this.configurationService;
-    }
-
-    public SystemOrchestratorService getSystemOrchestratorService() {
-        return this.systemOrchestratorService;
-    }
-
-    public ProvisionService getProvisionService() {
-        return provisionService;
-    }
-
-    public WorkspaceCrudService getWorkspaceCrudService() {
-        return workspaceService;
-    }
-
-    public WorkspaceThemeService getWorkspaceThemeService() {
-        return projectThemeService;
     }
 }
