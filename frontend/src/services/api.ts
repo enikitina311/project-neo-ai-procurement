@@ -1,24 +1,8 @@
-import type { PluginApiClient } from "@enikitina311/plugin-sdk-fe";
+// Phase 14 Group H: apiClient now ships from plugin-sdk-fe and is wired
+// through <PluginHostProvider> at the host's plugin route boundary.
+import { apiClient } from "@enikitina311/plugin-sdk-fe";
 
-/**
- * Module-level apiClient singleton, инициализируется host'ом при boot
- * через `setApiClient(hostApiClient)` ПЕРЕД монтированием routes плагина.
- */
-let _api: PluginApiClient | null = null;
-
-export function setApiClient(api: PluginApiClient): void {
-  _api = api;
-}
-
-function getApi(): PluginApiClient {
-  if (!_api) {
-    throw new Error(
-      "Procurement frontend module: apiClient не инициализирован. " +
-        "Host должен вызвать setApiClient(apiClient) перед mount'ом routes.",
-    );
-  }
-  return _api;
-}
+export { apiClient };
 
 export type ExecutePayload = {
   functionName: string;
@@ -271,7 +255,7 @@ export const parseProcurementNmcTableJson = (
 };
 
 const execute = async <T>(payload: ExecutePayload): Promise<T> => {
-  const { data } = await getApi().post<{ result: T }>(
+  const { data } = await apiClient.post<{ result: T }>(
     "/workspaces/actions/execute",
     payload,
   );
@@ -309,7 +293,7 @@ export const supplierSearch = async (
   payload: ExecutePayload,
   signal?: AbortSignal,
 ) => {
-  const { data } = await getApi().post<{ result: SupplierSearchResult }>(
+  const { data } = await apiClient.post<{ result: SupplierSearchResult }>(
     "/workspaces/actions/execute",
     payload,
     { timeout: 180000, signal },
@@ -379,7 +363,7 @@ export const uploadProcurementFile = async (
 
   const url = `/workspaces/files/upload?${searchParams.toString()}`;
 
-  const { data } = await getApi().post<{ id: string }>(url, formData, {
+  const { data } = await apiClient.post<{ id: string }>(url, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -393,7 +377,7 @@ export const openProcurementFile = async (
   fileName?: string | null,
 ) => {
   const url = `/workspaces/files/${fileId}/download`;
-  const response = await getApi().get<Blob>(url, {
+  const response = await apiClient.get<Blob>(url, {
     responseType: "blob",
   });
 

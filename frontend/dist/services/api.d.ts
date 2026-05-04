@@ -1,5 +1,5 @@
-import type { PluginApiClient } from "@enikitina311/plugin-sdk-fe";
-export declare function setApiClient(api: PluginApiClient): void;
+import { apiClient } from "@enikitina311/plugin-sdk-fe";
+export { apiClient };
 export type ExecutePayload = {
     functionName: string;
     values: (string | number | boolean | null)[] | object[];

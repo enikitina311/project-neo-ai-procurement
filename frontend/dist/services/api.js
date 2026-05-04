@@ -1,18 +1,7 @@
-/**
- * Module-level apiClient singleton, инициализируется host'ом при boot
- * через `setApiClient(hostApiClient)` ПЕРЕД монтированием routes плагина.
- */
-let _api = null;
-export function setApiClient(api) {
-    _api = api;
-}
-function getApi() {
-    if (!_api) {
-        throw new Error("Procurement frontend module: apiClient не инициализирован. " +
-            "Host должен вызвать setApiClient(apiClient) перед mount'ом routes.");
-    }
-    return _api;
-}
+// Phase 14 Group H: apiClient now ships from plugin-sdk-fe and is wired
+// through <PluginHostProvider> at the host's plugin route boundary.
+import { apiClient } from "@enikitina311/plugin-sdk-fe";
+export { apiClient };
 const parseNullableNumber = (value) => {
     if (value === null || value === undefined || value === "") {
         return null;
@@ -78,7 +67,7 @@ export const parseProcurementNmcTableJson = (raw) => {
     }
 };
 const execute = async (payload) => {
-    const { data } = await getApi().post("/workspaces/actions/execute", payload);
+    const { data } = await apiClient.post("/workspaces/actions/execute", payload);
     return data.result;
 };
 export const listPackages = (payload) => execute(payload);
@@ -91,7 +80,7 @@ export const updateItem = (payload) => execute(payload);
 export const deleteItem = (payload) => execute(payload);
 export const listSuppliers = (payload) => execute(payload);
 export const supplierSearch = async (payload, signal) => {
-    const { data } = await getApi().post("/workspaces/actions/execute", payload, { timeout: 180000, signal });
+    const { data } = await apiClient.post("/workspaces/actions/execute", payload, { timeout: 180000, signal });
     return data.result;
 };
 export const supplierSearchStart = (payload) => execute(payload);
@@ -117,7 +106,7 @@ export const uploadProcurementFile = async (file, projectId, subPathIds) => {
     searchParams.append("projectId", projectId);
     subPathIds.forEach((id) => searchParams.append("subPathIds", id));
     const url = `/workspaces/files/upload?${searchParams.toString()}`;
-    const { data } = await getApi().post(url, formData, {
+    const { data } = await apiClient.post(url, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -126,7 +115,7 @@ export const uploadProcurementFile = async (file, projectId, subPathIds) => {
 };
 export const openProcurementFile = async (fileId, fileName) => {
     const url = `/workspaces/files/${fileId}/download`;
-    const response = await getApi().get(url, {
+    const response = await apiClient.get(url, {
         responseType: "blob",
     });
     const blobUrl = window.URL.createObjectURL(response.data);
