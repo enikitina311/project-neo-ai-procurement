@@ -31,7 +31,7 @@ public class ProcurementApp extends BaseSolution {
         this.pluginContext = this.createApplicationContext();
         AppContext.registerPluginContext(this.pluginContext);
 
-        this.appConfig = this.registrationService.getPluginConfig(this.pluginContext, ProcurementConfiguration.class);
+        this.appConfig = this.host.configLoader().getPluginConfig(this.pluginContext, ProcurementConfiguration.class);
 
         ProcurementModule moduleConfig = AppContext.tryGet(ProcurementModule.class);
         log.info("Procurement module config resolved: {}", moduleConfig != null);
