@@ -15,7 +15,9 @@ import { procurementEn as en } from "./locales/en";
 const manifest: ServiceManifest = {
   name: "procurement",
   displayName: "Закупки",
-  version: "0.3.0",
+  version: "0.3.1",
+
+  requiresSdkVersion: ">=0.9.0",
 
   requires: [{ serviceName: "core", versionRange: ">=0.3.0" }],
   optional: [],
