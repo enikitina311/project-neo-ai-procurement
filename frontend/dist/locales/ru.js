@@ -1,4 +1,7 @@
 export const procurementRu = {
+    // Display metadata (Phase 14 Group A) — потребляется host'ом для cards и sidebar.
+    displayName: "Ассистент закупок",
+    displayDescription: "Подготовка коммерческих предложений, поиск поставщиков и расчёт НМЦ",
     pageTitle: "Ассистент закупок",
     tabs: {
         items: "Номенклатура",

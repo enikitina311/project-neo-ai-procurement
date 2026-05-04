@@ -22,6 +22,17 @@ const manifest: ServiceManifest = {
 
   applicableCategories: ["PROJECT"],
 
+  displayMetadata: {
+    serviceCode: "procurement",
+    nameRu: "Ассистент закупок",
+    nameEn: "Procurement Assistant",
+    nameKey: "procurement:displayName",
+    descriptionKey: "procurement:displayDescription",
+    routePrefix: "procurement",
+    backendComponentNames: ["korus_ai_procurement__component"],
+    backendNames: ["korus_ai_procurement"],
+  },
+
   routes: [
     {
       path: ":projectId/procurement/:serviceId",

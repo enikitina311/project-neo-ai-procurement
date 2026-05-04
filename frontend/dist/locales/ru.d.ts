@@ -1,4 +1,6 @@
 export declare const procurementRu: {
+    displayName: string;
+    displayDescription: string;
     pageTitle: string;
     tabs: {
         items: string;

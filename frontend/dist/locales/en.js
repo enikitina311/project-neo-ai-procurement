@@ -1,4 +1,8 @@
 export const procurementEn = {
+    // Display metadata (Phase 14 Group A) — used by host for home-page cards
+    // and sidebar via `displayMetadata.{nameKey,descriptionKey}`.
+    displayName: "Procurement Assistant",
+    displayDescription: "Drafting commercial offers, finding suppliers, and calculating starting prices",
     pageTitle: "Procurement Assistant",
     tabs: {
         items: "Items",

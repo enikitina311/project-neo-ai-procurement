@@ -11,6 +11,16 @@ const manifest = {
     requires: [{ serviceName: "core", versionRange: ">=0.3.0" }],
     optional: [],
     applicableCategories: ["PROJECT"],
+    displayMetadata: {
+        serviceCode: "procurement",
+        nameRu: "Ассистент закупок",
+        nameEn: "Procurement Assistant",
+        nameKey: "procurement:displayName",
+        descriptionKey: "procurement:displayDescription",
+        routePrefix: "procurement",
+        backendComponentNames: ["korus_ai_procurement__component"],
+        backendNames: ["korus_ai_procurement"],
+    },
     routes: [
         {
             path: ":projectId/procurement/:serviceId",
