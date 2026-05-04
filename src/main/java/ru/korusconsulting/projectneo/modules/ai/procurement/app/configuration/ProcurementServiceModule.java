@@ -68,7 +68,12 @@ public class ProcurementServiceModule implements ServiceModule {
 
     @Override
     public List<String> migrations() {
-        return Collections.emptyList();
+        return List.of(
+            "config/procurement/database/procurement_000_create_schema.xml",
+            "config/procurement/database/procurement_001_schema.xml",
+            "config/procurement/database/procurement_002_drop_cross_plugin_fk.xml",
+            "config/procurement/database/procurement_003_rename_project_id_columns.xml"
+        );
     }
 
     @Override

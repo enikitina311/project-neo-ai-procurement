@@ -4,32 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.yaml.snakeyaml.Yaml;
 
-import ru.korusconsulting.projectneo.core.common.support.YamlPropertySourceFactory;
 import ru.korusconsulting.projectneo.core.services.configuration.base.BaseConfigurationService;
 import ru.korusconsulting.projectneo.core.services.configuration.dto.response.CoreConfigurationResponse;
 import ru.korusconsulting.projectneo.core.services.database.DatabaseService;
-import ru.korusconsulting.projectneo.core.services.provision.config.DatabaseConfig;
-
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@Slf4j
 @EnableScheduling
 @ComponentScan(basePackages = "ru.korusconsulting.projectneo.modules.ai.procurement")
-@PropertySource(value = "classpath:config/module.yml", factory = YamlPropertySourceFactory.class)
 public class ProcurementConfiguration {
-
-    public ProcurementConfiguration() {
-        log.debug("ProcurementConfiguration constructor called");
-    }
 
     private DatabaseService databaseService;
     private BaseConfigurationService<CoreConfigurationResponse> configurationService;
@@ -37,60 +21,6 @@ public class ProcurementConfiguration {
     @Bean
     public ProcurementSettings procurementSettings() {
         return new ProcurementSettings();
-    }
-
-    @Bean
-    public ProcurementModule procurementModule() {
-        log.debug("Creating ProcurementModule bean");
-        try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("config/module.yml");
-
-            if (inputStream == null) {
-                log.warn("module.yml not found in classpath");
-                return new ProcurementModule();
-            }
-
-            Yaml yaml = new Yaml();
-            Map<String, Object> data = yaml.load(inputStream);
-            log.debug("Loaded procurement module yaml");
-
-            ProcurementModule config = new ProcurementModule();
-
-            if (data != null && data.containsKey("module")) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> moduleData = (Map<String, Object>) data.get("module");
-
-                if (moduleData != null && moduleData.containsKey("database")) {
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> databaseList = (List<Map<String, Object>>) moduleData.get("database");
-
-                    List<DatabaseConfig> dbConfigs = new java.util.ArrayList<>();
-
-                    for (Map<String, Object> dbData : databaseList) {
-                        DatabaseConfig dbConfig = new DatabaseConfig();
-
-                        dbConfig.setName((String) dbData.get("name"));
-                        dbConfig.setPath((String) dbData.get("path"));
-                        dbConfig.setDescription((String) dbData.get("description"));
-                        dbConfig.setEnabled((Boolean) dbData.getOrDefault("enabled", true));
-                        dbConfig.setOrder((Integer) dbData.getOrDefault("order", 0));
-
-                        dbConfigs.add(dbConfig);
-                    }
-
-                    config.setDatabase(dbConfigs);
-                }
-            }
-
-            log.info(
-                "ProcurementModule bean created with {} database config(s)",
-                config.getDatabase() != null ? config.getDatabase().size() : 0);
-            return config;
-        } catch (Exception e) {
-            log.error("Failed to load ProcurementModule", e);
-            return new ProcurementModule();
-        }
     }
 
     @Autowired(required = false)
