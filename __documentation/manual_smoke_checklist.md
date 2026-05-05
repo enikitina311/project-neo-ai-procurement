@@ -5,7 +5,7 @@
 
 ## Environment
 - Backend plugin: `project-neo-be-procurement`
-- Frontend: `project-neo-fe-dev`
+- Frontend: `project-neo-be-procurement/frontend/`
 - AI integrations: `n8n` webhooks procurement flows
 - OCR: `ProcurementOcrService`
 

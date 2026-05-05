@@ -7,7 +7,7 @@
 Сервис `Ассистент закупок` встроен в `NEO` как отдельный PF4J-плагин:
 
 - backend plugin: `/home/ENikitina/apps/NEO/project-neo-be-procurement`
-- frontend page: `/home/ENikitina/apps/NEO/project-neo-fe-dev/src/pages/procurement`
+- frontend page: `project-neo-be-procurement/frontend/src/pages`
 
 Основная сущность сервиса: `Пакет закупки`.
 

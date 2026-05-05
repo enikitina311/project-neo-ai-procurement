@@ -19,8 +19,8 @@ type ExecutePayload = {
 
 Источник:
 
-- `project-neo-fe-dev/src/services/procurement/api.ts`
-- `project-neo-fe-dev/src/pages/procurement/lib/execute.ts`
+- `project-neo-be-procurement/frontend/src/services/api.ts`
+- `project-neo-be-procurement/frontend/src/pages/lib/execute.ts`
 
 ## 2. Публичные DataFunction-контракты
 
@@ -217,7 +217,7 @@ Payload:
 
 ## 5. Что стоит перепроверять перед изменением контракта
 
-- фронтовые вызовы в `project-neo-fe-dev/src/services/procurement/api.ts`
+- фронтовые вызовы в `project-neo-be-procurement/frontend/src/services/api.ts`
 - аргументы в `components/functions/*`
 - orchestration в `services/workflows/*`
 - документооборот между file storage -> KP upload -> KP analyze

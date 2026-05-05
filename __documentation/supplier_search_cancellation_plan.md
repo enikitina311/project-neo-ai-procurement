@@ -295,7 +295,7 @@ UI-модель должна измениться так:
 
 Сделать:
 
-- новый API слой в `project-neo-fe-dev/src/services/procurement/api.ts`;
+- новый API слой в `project-neo-be-procurement/frontend/src/services/api.ts`;
 - локальный state `searchRunId`;
 - polling статуса;
 - cancel по закрытию модалки.

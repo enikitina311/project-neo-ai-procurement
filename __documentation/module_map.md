@@ -5,8 +5,8 @@
 ## 1. Корневые каталоги
 
 - backend plugin: `/home/ENikitina/apps/NEO/project-neo-be-procurement`
-- frontend procurement: `/home/ENikitina/apps/NEO/project-neo-fe-dev/src/pages/procurement`
-- frontend API: `/home/ENikitina/apps/NEO/project-neo-fe-dev/src/services/procurement`
+- frontend procurement: `project-neo-be-procurement/frontend/src/pages`
+- frontend API: `project-neo-be-procurement/frontend/src/services`
 
 ## 2. Backend-карта
 
